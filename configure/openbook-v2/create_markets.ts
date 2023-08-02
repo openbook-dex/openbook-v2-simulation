@@ -36,23 +36,35 @@ export async function createMarket(
   quoteMint: PublicKey,
   index: number
 ): Promise<Market> {
+  // const transaction = new web3.Transaction().add(
+  //   web3.SystemProgram.transfer({
+  //     fromPubkey: anchorProvider.keypair.publicKey,
+  //     toPubkey: adminKp.publicKey,
+  //     lamports: 1 * LAMPORTS_PER_SOL,
+  //   })
+  // );
+  // await anchorProvider.sendAndConfirm(transaction, [anchorProvider.keypair]);
+  adminKp = anchorProvider.keypair;
+
   let [oracleAId, _tmp1] = PublicKey.findProgramAddressSync(
-    [Buffer.from("StubOracle"), baseMint.toBytes()],
+    [
+      Buffer.from("StubOracle"),
+      anchorProvider.keypair.publicKey.toBytes(),
+      baseMint.toBytes(),
+    ],
     openbookProgramId
   );
 
   let [oracleBId, _tmp3] = PublicKey.findProgramAddressSync(
-    [Buffer.from("StubOracle"), quoteMint.toBytes()],
+    [
+      Buffer.from("StubOracle"),
+      anchorProvider.keypair.publicKey.toBytes(),
+      quoteMint.toBytes(),
+    ],
     openbookProgramId
   );
 
   let price = getRandomInt(1000);
-
-  let sig = await anchorProvider.connection.requestAirdrop(
-    adminKp.publicKey,
-    1000 * LAMPORTS_PER_SOL
-  );
-  await anchorProvider.connection.confirmTransaction(sig);
 
   await program.methods
     .stubOracleCreate({ val: new BN(1) })
@@ -70,7 +82,7 @@ export async function createMarket(
     .accounts({
       payer: adminKp.publicKey,
       oracle: oracleBId,
-      mint: baseMint,
+      mint: quoteMint,
       systemProgram: web3.SystemProgram.programId,
     })
     .signers([adminKp])
