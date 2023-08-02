@@ -4,7 +4,7 @@ import { Market, createMarket } from "./create_markets";
 import { MintUtils } from "../general/mint_utils";
 import { OpenbookV2 } from "./openbook_v2";
 import IDL from "../programs/openbook_v2.json";
-import { BN, Program, web3, IdlTypes } from "@project-serum/anchor";
+import { BN, Program, web3 } from "@project-serum/anchor";
 import { User } from "../general/create_users";
 import { U64_MAX_BN } from "@blockworks-foundation/mango-v4";
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
@@ -64,6 +64,27 @@ export class OpenbookConfigurator {
     const openOrders = await Promise.all(
       markets.map(async (market) => {
         let accountIndex = new BN(0);
+
+        let [openOrdersIndexer, _tmp1] = PublicKey.findProgramAddressSync(
+          [
+            Buffer.from("OpenOrdersIndexer"),
+            user.publicKey.toBuffer(),
+            market.market_pk.toBuffer(),
+          ],
+          this.openbookProgramId
+        );
+        await this.program.methods
+          .createOpenOrdersIndexer()
+          .accounts({
+            openOrdersIndexer,
+            market: market.market_pk,
+            owner: user.publicKey,
+            payer: this.anchorProvider.keypair.publicKey,
+            systemProgram: web3.SystemProgram.programId,
+          })
+          .signers([user])
+          .rpc();
+
         let [openOrders, _tmp] = PublicKey.findProgramAddressSync(
           [
             Buffer.from("OpenOrders"),
@@ -75,8 +96,9 @@ export class OpenbookConfigurator {
         );
 
         await this.program.methods
-          .initOpenOrders(0)
+          .initOpenOrders()
           .accounts({
+            openOrdersIndexer,
             openOrdersAccount: openOrders,
             market: market.market_pk,
             owner: user.publicKey,
@@ -107,29 +129,33 @@ export class OpenbookConfigurator {
     for (let i = 0; i < nbOrders; ++i) {
       let side = { bid: {} };
       let placeOrder = { limit: {} };
-      let selfTradeBehavior = {decrementTake: {}};
+      let selfTradeBehavior = { decrementTake: {} };
+
+      let args = {
+        side,
+        priceLots: new BN(1000 - 1 - i),
+        maxBaseLots: new BN(10),
+        maxQuoteLotsIncludingFees: new BN(1000000),
+        clientOrderId: new BN(i),
+        orderType: placeOrder,
+        expiryTimestamp: selfTradeBehavior,
+        selfTradeBehavior: U64_MAX_BN,
+        limit: 255,
+      };
 
       await this.program.methods
-        .placeOrder(
-          side,
-          new BN(1000 - 1 - i),
-          new BN(10),
-          new BN(1000000),
-          new BN(i),
-          placeOrder,
-          selfTradeBehavior,
-          U64_MAX_BN,
-          255
-        )
+        .placeOrder(args)
         .accounts({
           asks: marketData.asks,
           marketVault: marketData.quote_vault,
           bids: marketData.bids,
           eventQueue: marketData.event_queue,
           market: marketData.market_pk,
-          openOrdersAccount: user.open_orders[marketData.market_index].open_orders,
-          oracle: marketData.oracle,
-          ownerOrDelegate: userKp.publicKey,
+          openOrdersAccount:
+            user.open_orders[marketData.market_index].open_orders,
+          oracleA: marketData.oracleA,
+          oracleB: marketData.oracleB,
+          signer: userKp.publicKey,
           tokenDepositAccount: user.token_data[0].token_account,
           systemProgram: web3.SystemProgram.programId,
           tokenProgram: TOKEN_PROGRAM_ID,
@@ -142,30 +168,35 @@ export class OpenbookConfigurator {
     for (let i = 0; i < nbOrders; ++i) {
       let side = { ask: {} };
       let placeOrder = { limit: {} };
-      let selfTradeBehavior = {decrementTake: {}};
+      let selfTradeBehavior = { decrementTake: {} };
 
+      let args = {
+        side,
+        priceLots: new BN(1000 + 1 + i),
+        maxBaseLots: new BN(10000),
+        maxQuoteLotsIncludingFees: new BN(1000000),
+        clientOrderId: new BN(i + nbOrders + 1),
+        orderType: placeOrder,
+        expiryTimestamp: selfTradeBehavior,
+        selfTradeBehavior: U64_MAX_BN,
+        limit: 255,
+      };
       await this.program.methods
-        .placeOrder(
-          side,
-          new BN(1000 + 1 + i),
-          new BN(10000),
-          new BN(1000000),
-          new BN(i + nbOrders + 1),
-          placeOrder,
-          selfTradeBehavior,
-          U64_MAX_BN,
-          255
-        )
+        .placeOrder(args)
         .accounts({
           asks: marketData.asks,
           marketVault: marketData.base_vault,
           bids: marketData.bids,
           eventQueue: marketData.event_queue,
           market: marketData.market_pk,
-          openOrdersAccount: user.open_orders[marketData.market_index].open_orders,
-          oracle: marketData.oracle,
-          ownerOrDelegate: userKp.publicKey,
-          tokenDepositAccount: user.token_data.filter(x => x.mint === marketData.base_mint).at(0)?.token_account,
+          openOrdersAccount:
+            user.open_orders[marketData.market_index].open_orders,
+          oracleA: marketData.oracleA,
+          oracleB: marketData.oracleB,
+          signer: userKp.publicKey,
+          tokenDepositAccount: user.token_data
+            .filter((x) => x.mint === marketData.base_mint)
+            .at(0)?.token_account,
           systemProgram: web3.SystemProgram.programId,
           tokenProgram: TOKEN_PROGRAM_ID,
           openOrdersAdmin: undefined,

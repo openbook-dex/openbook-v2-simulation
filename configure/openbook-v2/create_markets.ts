@@ -1,9 +1,7 @@
-import { Connection, Keypair, LAMPORTS_PER_SOL, PublicKey, sendAndConfirmTransaction } from "@solana/web3.js";
-import IDL from "../programs/openbook_v2.json";
+import { Keypair, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import { Program, web3, BN } from "@project-serum/anchor";
 import { createAccount } from "../general/solana_utils";
 import { MintUtils } from "../general/mint_utils";
-import { I80F48, I80F48Dto, U64_MAX_BN } from "@blockworks-foundation/mango-v4";
 import { OpenbookV2 } from "./openbook_v2";
 import { TestProvider } from "../anchor_utils";
 
@@ -11,7 +9,8 @@ export interface Market {
   name: string;
   admin: number[];
   market_pk: PublicKey;
-  oracle: PublicKey;
+  oracleA: PublicKey;
+  oracleB: PublicKey;
   asks: PublicKey;
   bids: PublicKey;
   event_queue: PublicKey;
@@ -20,13 +19,12 @@ export interface Market {
   base_mint: PublicKey;
   quote_mint: PublicKey;
   market_index: number;
-  price: number,
+  price: number;
 }
 
-function getRandomInt(max:  number) {
+function getRandomInt(max: number) {
   return Math.floor(Math.random() * max) + 100;
 }
-
 
 export async function createMarket(
   program: Program<OpenbookV2>,
@@ -38,34 +36,65 @@ export async function createMarket(
   quoteMint: PublicKey,
   index: number
 ): Promise<Market> {
-  let [oracleId, _tmp] = PublicKey.findProgramAddressSync(
+  let [oracleAId, _tmp1] = PublicKey.findProgramAddressSync(
     [Buffer.from("StubOracle"), baseMint.toBytes()],
+    openbookProgramId
+  );
+
+  let [oracleBId, _tmp3] = PublicKey.findProgramAddressSync(
+    [Buffer.from("StubOracle"), quoteMint.toBytes()],
     openbookProgramId
   );
 
   let price = getRandomInt(1000);
 
-  let sig = await anchorProvider.connection.requestAirdrop(adminKp.publicKey, 1000 * LAMPORTS_PER_SOL);
+  let sig = await anchorProvider.connection.requestAirdrop(
+    adminKp.publicKey,
+    1000 * LAMPORTS_PER_SOL
+  );
   await anchorProvider.connection.confirmTransaction(sig);
 
   await program.methods
-    .stubOracleCreate({val: new BN(1)})
+    .stubOracleCreate({ val: new BN(1) })
     .accounts({
-      admin : adminKp.publicKey,
       payer: adminKp.publicKey,
-      oracle: oracleId,
+      oracle: oracleAId,
       mint: baseMint,
       systemProgram: web3.SystemProgram.programId,
-    }).signers([adminKp]).rpc();
+    })
+    .signers([adminKp])
+    .rpc();
 
-  await program.methods.stubOracleSet({
-    val: new BN(price),
-  }).accounts(
-    {
-      admin: adminKp.publicKey,
-      oracle: oracleId,
-    }
-  ).signers([adminKp]).rpc();
+  await program.methods
+    .stubOracleCreate({ val: new BN(1) })
+    .accounts({
+      payer: adminKp.publicKey,
+      oracle: oracleBId,
+      mint: baseMint,
+      systemProgram: web3.SystemProgram.programId,
+    })
+    .signers([adminKp])
+    .rpc();
+
+  await program.methods
+    .stubOracleSet({
+      val: new BN(price),
+    })
+    .accounts({
+      oracle: oracleAId,
+    })
+    .signers([adminKp])
+    .rpc();
+
+  await program.methods
+    .stubOracleSet({
+      val: new BN(price),
+    })
+    .accounts({
+      oracle: oracleBId,
+    })
+    .signers([adminKp])
+    .rpc();
 
   // bookside size = 123720
   let asks = await createAccount(
@@ -86,28 +115,28 @@ export async function createMarket(
     101592,
     openbookProgramId
   );
-  let marketIndex: BN = new BN(index);
 
-  let [marketPk, _tmp2] = PublicKey.findProgramAddressSync(
-    [Buffer.from("Market"), adminKp.publicKey.toBuffer(), marketIndex.toBuffer("le", 4)],
+  let marketPk = Keypair.generate();
+
+  let [marketAuthority, _tmp2] = PublicKey.findProgramAddressSync(
+    [Buffer.from("Market"), marketPk.publicKey.toBuffer()],
     openbookProgramId
   );
 
   let baseVault = await mintUtils.createTokenAccount(
     baseMint,
     anchorProvider.keypair,
-    marketPk
+    marketPk.publicKey
   );
   let quoteVault = await mintUtils.createTokenAccount(
     quoteMint,
     anchorProvider.keypair,
-    marketPk
+    marketPk.publicKey
   );
   let name = "index " + index.toString() + " wrt 0";
 
   await program.methods
     .createMarket(
-      marketIndex,
       name,
       {
         confFilter: 0,
@@ -117,10 +146,11 @@ export async function createMarket(
       new BN(1),
       new BN(0),
       new BN(0),
-      new BN(0),
+      new BN(0)
     )
     .accounts({
-      market: marketPk,
+      market: marketPk.publicKey,
+      marketAuthority,
       bids,
       asks,
       eventQueue,
@@ -130,16 +160,19 @@ export async function createMarket(
       baseMint,
       quoteMint,
       systemProgram: web3.SystemProgram.programId,
-      oracle: oracleId,
+      oracleA: oracleAId,
+      oracleB: oracleBId,
       collectFeeAdmin: adminKp.publicKey,
       openOrdersAdmin: null,
       closeMarketAdmin: null,
       consumeEventsAdmin: null,
     })
-    .preInstructions([web3.ComputeBudgetProgram.setComputeUnitLimit({
-      units: 10_000_000
-    })])
-    .signers([adminKp])
+    .preInstructions([
+      web3.ComputeBudgetProgram.setComputeUnitLimit({
+        units: 10_000_000,
+      }),
+    ])
+    .signers([adminKp, marketPk])
     .rpc();
 
   return {
@@ -151,8 +184,9 @@ export async function createMarket(
     base_mint: baseMint,
     base_vault: baseVault,
     market_index: index,
-    market_pk: marketPk,
-    oracle: oracleId,
+    market_pk: marketPk.publicKey,
+    oracleA: oracleAId,
+    oracleB: oracleBId,
     quote_mint: quoteMint,
     quote_vault: quoteVault,
     price,
