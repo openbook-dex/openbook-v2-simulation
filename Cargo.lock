@@ -1830,7 +1830,7 @@ dependencies = [
 [[package]]
 name = "fixed"
 version = "1.11.0"
-source = "git+https://github.com/godmodegalactus/openbook-v2.git?branch=openbook-simulation#ff61f78b8677ce0e8354d71a5a0d6ab2893752ad"
+source = "git+https://github.com/openbook-dex/openbook-v2?branch=master#b07a048acb05a8ce4b9d04fbab0902319b4d56f2"
 dependencies = [
  "az",
  "borsh",
@@ -3365,7 +3365,7 @@ checksum = "624a8340c38c1b80fd549087862da4ba43e08858af025b236e509b6649fc13d5"
 [[package]]
 name = "openbook-v2"
 version = "0.1.0"
-source = "git+https://github.com/godmodegalactus/openbook-v2.git?branch=openbook-simulation#ff61f78b8677ce0e8354d71a5a0d6ab2893752ad"
+source = "git+https://github.com/openbook-dex/openbook-v2?branch=master#b07a048acb05a8ce4b9d04fbab0902319b4d56f2"
 dependencies = [
  "anchor-lang",
  "anchor-spl",

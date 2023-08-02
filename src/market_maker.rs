@@ -43,7 +43,7 @@ fn create_market_making_instructions(
             bids: market.bids,
             market: market.market_pk,
             open_orders_account,
-            owner: user.secret.pubkey(),
+            signer: user.secret.pubkey(),
         };
         let accounts_meta = accounts.to_account_metas(None);
         let instruction_data = openbook_v2::instruction::CancelAllOrders {
@@ -67,23 +67,27 @@ fn create_market_making_instructions(
             market_vault: market.quote_vault,
             open_orders_account,
             open_orders_admin: None,
-            oracle: market.oracle,
-            owner_or_delegate: user.secret.pubkey(),
+            oracle_a: Some(market.oracle_a),
+            oracle_b: Some(market.oracle_b),
+            signer: user.secret.pubkey(),
             token_deposit_account: user.token_data[0].token_account,
             system_program: anchor_client::solana_sdk::system_program::id(),
             token_program: anchor_spl::token::ID,
         };
 
         let instruction_data = openbook_v2::instruction::PlaceOrder {
-            order_type: openbook_v2::state::PlaceOrderType::Limit,
-            limit: 255,
-            client_order_id: client_id,
-            max_base_lots: size,
-            expiry_timestamp: u64::MAX,
-            max_quote_lots_including_fees: i64::MAX,
-            price_lots: market.price as i64 + offset,
-            side: openbook_v2::state::Side::Bid,
-            self_trade_behavior: openbook_v2::state::SelfTradeBehavior::DecrementTake,
+            args: openbook_v2::PlaceOrderArgs {
+                order_type: openbook_v2::state::PlaceOrderType::Limit,
+                limit: 255,
+                client_order_id: client_id,
+                max_base_lots: size,
+                expiry_timestamp: u64::MAX,
+                max_quote_lots_including_fees: i64::MAX,
+                price_lots: market.price as i64 + offset,
+                side: openbook_v2::state::Side::Bid,
+                self_trade_behavior: openbook_v2::state::SelfTradeBehavior::DecrementTake,
+            },
+            
         };
         Instruction::new_with_bytes(
             program_id,
@@ -102,23 +106,26 @@ fn create_market_making_instructions(
             market_vault: market.base_vault,
             open_orders_account,
             open_orders_admin: None,
-            oracle: market.oracle,
-            owner_or_delegate: user.secret.pubkey(),
+            oracle_a: Some(market.oracle_a),
+            oracle_b: Some(market.oracle_b),
+            signer: user.secret.pubkey(),
             token_deposit_account: market.base_vault,
             system_program: anchor_client::solana_sdk::system_program::id(),
             token_program: anchor_spl::token::ID,
         };
 
         let instruction_data = openbook_v2::instruction::PlaceOrder {
-            order_type: openbook_v2::state::PlaceOrderType::Limit,
-            limit: 255,
-            client_order_id: client_id,
-            max_base_lots: i64::MAX,
-            expiry_timestamp: u64::MAX,
-            max_quote_lots_including_fees: size,
-            price_lots: market.price as i64 - offset,
-            side: openbook_v2::state::Side::Ask,
-            self_trade_behavior: openbook_v2::state::SelfTradeBehavior::DecrementTake,
+            args: openbook_v2::PlaceOrderArgs {
+                order_type: openbook_v2::state::PlaceOrderType::Limit,
+                limit: 255,
+                client_order_id: client_id,
+                max_base_lots: i64::MAX,
+                expiry_timestamp: u64::MAX,
+                max_quote_lots_including_fees: size,
+                price_lots: market.price as i64 - offset,
+                side: openbook_v2::state::Side::Ask,
+                self_trade_behavior: openbook_v2::state::SelfTradeBehavior::DecrementTake,
+            },
         };
         Instruction::new_with_bytes(
             program_id,
