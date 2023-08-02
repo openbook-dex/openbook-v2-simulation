@@ -49,7 +49,7 @@ export async function createMarket(
   let [oracleAId, _tmp1] = PublicKey.findProgramAddressSync(
     [
       Buffer.from("StubOracle"),
-      anchorProvider.keypair.publicKey.toBytes(),
+      adminKp.publicKey.toBytes(),
       baseMint.toBytes(),
     ],
     openbookProgramId
@@ -58,7 +58,7 @@ export async function createMarket(
   let [oracleBId, _tmp3] = PublicKey.findProgramAddressSync(
     [
       Buffer.from("StubOracle"),
-      anchorProvider.keypair.publicKey.toBytes(),
+      adminKp.publicKey.toBytes(),
       quoteMint.toBytes(),
     ],
     openbookProgramId
@@ -66,24 +66,39 @@ export async function createMarket(
 
   let price = getRandomInt(1000);
 
-  await program.methods
-    .stubOracleCreate({ val: new BN(1) })
-    .accounts({
-      payer: adminKp.publicKey,
-      oracle: oracleAId,
-      mint: baseMint,
-      systemProgram: web3.SystemProgram.programId,
-    })
-    .signers([adminKp])
-    .rpc();
+
+  if (await anchorProvider.connection.getAccountInfo(oracleAId) == null ) {
+    await program.methods
+      .stubOracleCreate({ val: new BN(1) })
+      .accounts({
+        payer: adminKp.publicKey,
+        oracle: oracleAId,
+        mint: baseMint,
+        systemProgram: web3.SystemProgram.programId,
+      })
+      .signers([adminKp])
+      .rpc();
+  }
+  if (await anchorProvider.connection.getAccountInfo(oracleBId) == null ) {
+    await program.methods
+      .stubOracleCreate({ val: new BN(1) })
+      .accounts({
+        payer: adminKp.publicKey,
+        oracle: oracleBId,
+        mint: quoteMint,
+        systemProgram: web3.SystemProgram.programId,
+      })
+      .signers([adminKp])
+      .rpc();
+  }
 
   await program.methods
-    .stubOracleCreate({ val: new BN(1) })
+    .stubOracleSet({
+      val: new BN(price),
+    })
     .accounts({
-      payer: adminKp.publicKey,
-      oracle: oracleBId,
-      mint: quoteMint,
-      systemProgram: web3.SystemProgram.programId,
+      owner: adminKp.publicKey,
+      oracle: oracleAId,
     })
     .signers([adminKp])
     .rpc();
@@ -93,16 +108,7 @@ export async function createMarket(
       val: new BN(price),
     })
     .accounts({
-      oracle: oracleAId,
-    })
-    .signers([adminKp])
-    .rpc();
-
-  await program.methods
-    .stubOracleSet({
-      val: new BN(price),
-    })
-    .accounts({
+      owner: adminKp.publicKey,
       oracle: oracleBId,
     })
     .signers([adminKp])
