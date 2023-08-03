@@ -63,7 +63,7 @@ export class OpenbookConfigurator {
   ): Promise<OpenOrders[]> {
     const openOrders = await Promise.all(
       markets.map(async (market) => {
-        let accountIndex = new BN(0);
+        let accountIndex = new BN(1);
 
         let [openOrdersIndexer, _tmp1] = PublicKey.findProgramAddressSync(
           [
