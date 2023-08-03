@@ -130,7 +130,7 @@ export async function createMarket(
   let eventQueue = await createAccount(
     anchorProvider.connection,
     anchorProvider.keypair,
-    101592,
+    91288,
     openbookProgramId
   );
 
