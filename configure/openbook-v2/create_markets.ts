@@ -9,8 +9,8 @@ export interface Market {
   name: string;
   admin: number[];
   market_pk: PublicKey;
-  oracleA: PublicKey;
-  oracleB: PublicKey;
+  oracle_a: PublicKey;
+  oracle_b: PublicKey;
   asks: PublicKey;
   bids: PublicKey;
   event_queue: PublicKey;
@@ -203,8 +203,8 @@ export async function createMarket(
     base_vault: baseVault,
     market_index: index,
     market_pk: marketPk.publicKey,
-    oracleA: oracleAId,
-    oracleB: oracleBId,
+    oracle_a: oracleAId,
+    oracle_b: oracleBId,
     quote_mint: quoteMint,
     quote_vault: quoteVault,
     price,

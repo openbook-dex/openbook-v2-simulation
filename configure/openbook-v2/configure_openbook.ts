@@ -153,8 +153,8 @@ export class OpenbookConfigurator {
           market: marketData.market_pk,
           openOrdersAccount:
             user.open_orders[marketData.market_index].open_orders,
-          oracleA: marketData.oracleA,
-          oracleB: marketData.oracleB,
+          oracleA: marketData.oracle_a,
+          oracleB: marketData.oracle_b,
           signer: userKp.publicKey,
           tokenDepositAccount: user.token_data[0].token_account,
           systemProgram: web3.SystemProgram.programId,
@@ -191,8 +191,8 @@ export class OpenbookConfigurator {
           market: marketData.market_pk,
           openOrdersAccount:
             user.open_orders[marketData.market_index].open_orders,
-          oracleA: marketData.oracleA,
-          oracleB: marketData.oracleB,
+          oracleA: marketData.oracle_a,
+          oracleB: marketData.oracle_b,
           signer: userKp.publicKey,
           tokenDepositAccount: user.token_data
             .filter((x) => x.mint === marketData.base_mint)
