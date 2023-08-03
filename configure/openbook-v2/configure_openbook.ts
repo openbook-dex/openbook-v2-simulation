@@ -24,7 +24,7 @@ export class OpenbookConfigurator {
     connection: Connection,
     authority: Keypair,
     mintUtils: MintUtils,
-    openbookProgramId: PublicKey
+    openbookProgramId: PublicKey,
   ) {
     this.anchorProvider = new TestProvider(connection, authority);
     this.mintUtils = mintUtils;
@@ -32,7 +32,7 @@ export class OpenbookConfigurator {
     this.program = new Program<OpenbookV2>(
       IDL as OpenbookV2,
       this.openbookProgramId,
-      this.anchorProvider
+      this.anchorProvider,
     );
   }
 
@@ -51,15 +51,15 @@ export class OpenbookConfigurator {
             this.openbookProgramId,
             mint,
             quoteMint,
-            index
-          )
-        )
+            index,
+          ),
+        ),
     );
   }
 
   public async configureMarketForUser(
     user: Keypair,
-    markets: Market[]
+    markets: Market[],
   ): Promise<OpenOrders[]> {
     const openOrders = await Promise.all(
       markets.map(async (market) => {
@@ -71,7 +71,7 @@ export class OpenbookConfigurator {
             user.publicKey.toBuffer(),
             market.market_pk.toBuffer(),
           ],
-          this.openbookProgramId
+          this.openbookProgramId,
         );
         await this.program.methods
           .createOpenOrdersIndexer()
@@ -92,7 +92,7 @@ export class OpenbookConfigurator {
             market.market_pk.toBuffer(),
             accountIndex.toBuffer("le", 4),
           ],
-          this.openbookProgramId
+          this.openbookProgramId,
         );
 
         await this.program.methods
@@ -109,7 +109,7 @@ export class OpenbookConfigurator {
           .signers([user])
           .rpc();
         return [market.market_pk, openOrders];
-      })
+      }),
     );
 
     return openOrders.map((x) => {
@@ -124,7 +124,7 @@ export class OpenbookConfigurator {
     user: User,
     userKp: Keypair,
     marketData: Market,
-    nbOrders: number
+    nbOrders: number,
   ) {
     for (let i = 0; i < nbOrders; ++i) {
       let side = { bid: {} };
@@ -138,8 +138,8 @@ export class OpenbookConfigurator {
         maxQuoteLotsIncludingFees: new BN(1000000),
         clientOrderId: new BN(i),
         orderType: placeOrder,
-        expiryTimestamp: selfTradeBehavior,
-        selfTradeBehavior: U64_MAX_BN,
+        expiryTimestamp: U64_MAX_BN,
+        selfTradeBehavior: selfTradeBehavior,
         limit: 255,
       };
 
@@ -159,7 +159,7 @@ export class OpenbookConfigurator {
           tokenDepositAccount: user.token_data[0].token_account,
           systemProgram: web3.SystemProgram.programId,
           tokenProgram: TOKEN_PROGRAM_ID,
-          openOrdersAdmin: undefined,
+          openOrdersAdmin: null,
         })
         .signers([userKp])
         .rpc();
@@ -177,8 +177,8 @@ export class OpenbookConfigurator {
         maxQuoteLotsIncludingFees: new BN(1000000),
         clientOrderId: new BN(i + nbOrders + 1),
         orderType: placeOrder,
-        expiryTimestamp: selfTradeBehavior,
-        selfTradeBehavior: U64_MAX_BN,
+        expiryTimestamp: U64_MAX_BN,
+        selfTradeBehavior: selfTradeBehavior,
         limit: 255,
       };
       await this.program.methods
@@ -199,7 +199,7 @@ export class OpenbookConfigurator {
             .at(0)?.token_account,
           systemProgram: web3.SystemProgram.programId,
           tokenProgram: TOKEN_PROGRAM_ID,
-          openOrdersAdmin: undefined,
+          openOrdersAdmin: null,
         })
         .signers([userKp])
         .rpc();
