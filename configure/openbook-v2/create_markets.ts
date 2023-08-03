@@ -144,12 +144,12 @@ export async function createMarket(
   let baseVault = await mintUtils.createTokenAccount(
     baseMint,
     anchorProvider.keypair,
-    marketPk.publicKey
+    marketAuthority,
   );
   let quoteVault = await mintUtils.createTokenAccount(
     quoteMint,
     anchorProvider.keypair,
-    marketPk.publicKey
+    marketAuthority,
   );
   let name = "index " + index.toString() + " wrt 0";
 
