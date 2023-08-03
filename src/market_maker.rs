@@ -36,6 +36,8 @@ fn create_market_making_instructions(
         .map(|x| x.open_orders.clone())
         .expect("should exists");
 
+    // TODO Binye crank here!! To avoid panicked at 'assertion failed: !self.is_full()', programs/openbook-v2/src/state/orderbook/queue.rs:76:9
+
     // cancel all previous orders
     let cancel_order_instruction = {
         let accounts = openbook_v2::accounts::CancelOrder {
