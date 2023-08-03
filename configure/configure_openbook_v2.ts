@@ -292,5 +292,5 @@ async function configure(
   };
 
   console.log("creating output file");
-  fs.writeFileSync(outFile.toString(), JSON.stringify(outputFile));
+  fs.writeFileSync(outFile.toString(), JSON.stringify(outputFile, null, 2));
 }
