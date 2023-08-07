@@ -66,8 +66,7 @@ export async function createMarket(
 
   let price = getRandomInt(1000);
 
-
-  if (await anchorProvider.connection.getAccountInfo(oracleAId) == null ) {
+  if ((await anchorProvider.connection.getAccountInfo(oracleAId)) == null) {
     await program.methods
       .stubOracleCreate({ val: new BN(1) })
       .accounts({
@@ -79,7 +78,7 @@ export async function createMarket(
       .signers([adminKp])
       .rpc();
   }
-  if (await anchorProvider.connection.getAccountInfo(oracleBId) == null ) {
+  if ((await anchorProvider.connection.getAccountInfo(oracleBId)) == null) {
     await program.methods
       .stubOracleCreate({ val: new BN(1) })
       .accounts({
@@ -144,14 +143,19 @@ export async function createMarket(
   let baseVault = await mintUtils.createTokenAccount(
     baseMint,
     anchorProvider.keypair,
-    marketAuthority,
+    marketAuthority
   );
   let quoteVault = await mintUtils.createTokenAccount(
     quoteMint,
     anchorProvider.keypair,
-    marketAuthority,
+    marketAuthority
   );
   let name = "index " + index.toString() + " wrt 0";
+
+  let [eventAuthority, tmp3] = PublicKey.findProgramAddressSync(
+    [Buffer.from("__event_authority")],
+    openbookProgramId
+  );
 
   await program.methods
     .createMarket(
@@ -184,6 +188,8 @@ export async function createMarket(
       openOrdersAdmin: null,
       closeMarketAdmin: null,
       consumeEventsAdmin: null,
+      eventAuthority,
+      program: openbookProgramId,
     })
     .preInstructions([
       web3.ComputeBudgetProgram.setComputeUnitLimit({
