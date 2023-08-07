@@ -96,7 +96,7 @@ export class OpenbookConfigurator {
         );
 
         await this.program.methods
-          .initOpenOrders()
+          .createOpenOrdersAccount()
           .accounts({
             openOrdersIndexer,
             openOrdersAccount: openOrders,

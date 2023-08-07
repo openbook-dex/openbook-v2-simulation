@@ -101,6 +101,16 @@
           "isMut": false,
           "isSigner": false,
           "isOptional": true
+        },
+        {
+          "name": "eventAuthority",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "program",
+          "isMut": false,
+          "isSigner": false
         }
       ],
       "args": [
@@ -135,6 +145,50 @@
           "type": "i64"
         }
       ]
+    },
+    {
+      "name": "closeMarket",
+      "docs": [
+        "Close a [`Market`](crate::state::Market)."
+      ],
+      "accounts": [
+        {
+          "name": "closeMarketAdmin",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "market",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "bids",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "asks",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "eventQueue",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "solDestination",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
     },
     {
       "name": "createOpenOrdersIndexer",
@@ -194,7 +248,7 @@
       "args": []
     },
     {
-      "name": "initOpenOrders",
+      "name": "createOpenOrdersAccount",
       "accounts": [
         {
           "name": "payer",
@@ -230,6 +284,32 @@
         {
           "name": "systemProgram",
           "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "closeOpenOrdersAccount",
+      "accounts": [
+        {
+          "name": "owner",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "openOrdersIndexer",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "openOrdersAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "solDestination",
+          "isMut": true,
           "isSigner": false
         }
       ],
@@ -339,7 +419,10 @@
     },
     {
       "name": "cancelAndPlaceOrders",
-      "docs": ["Cancel orders and place multiple orders.", ""],
+      "docs": [
+        "Cancel orders and place multiple orders.",
+        ""
+      ],
       "accounts": [
         {
           "name": "signer",
@@ -799,7 +882,9 @@
     },
     {
       "name": "cancelAllOrders",
-      "docs": ["Cancel up to `limit` orders, optionally filtering by side"],
+      "docs": [
+        "Cancel up to `limit` orders, optionally filtering by side"
+      ],
       "accounts": [
         {
           "name": "signer",
@@ -845,7 +930,7 @@
     {
       "name": "deposit",
       "docs": [
-        "Desposit a certain amount of `base` and `quote` lamports into one's",
+        "Deposit a certain amount of `base` and `quote` lamports into one's",
         "[`Position`](crate::state::Position).",
         "",
         "Makers might wish to `deposit`, rather than have actual tokens moved for",
@@ -978,7 +1063,9 @@
     },
     {
       "name": "settleFunds",
-      "docs": ["Withdraw any available tokens."],
+      "docs": [
+        "Withdraw any available tokens."
+      ],
       "accounts": [
         {
           "name": "owner",
@@ -1106,7 +1193,9 @@
     },
     {
       "name": "sweepFees",
-      "docs": ["Sweep fees, as a [`Market`](crate::state::Market)'s admin."],
+      "docs": [
+        "Sweep fees, as a [`Market`](crate::state::Market)'s admin."
+      ],
       "accounts": [
         {
           "name": "collectFeeAdmin",
@@ -1224,75 +1313,6 @@
       ]
     },
     {
-      "name": "closeMarket",
-      "docs": ["Close a [`Market`](crate::state::Market)."],
-      "accounts": [
-        {
-          "name": "closeMarketAdmin",
-          "isMut": false,
-          "isSigner": true
-        },
-        {
-          "name": "market",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bids",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "asks",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "eventQueue",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "solDestination",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "closeOpenOrdersAccount",
-      "docs": ["Close a [`Market`](crate::state::Market)."],
-      "accounts": [
-        {
-          "name": "owner",
-          "isMut": false,
-          "isSigner": true
-        },
-        {
-          "name": "openOrdersIndexer",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "openOrdersAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "solDestination",
-          "isMut": true,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
       "name": "stubOracleCreate",
       "accounts": [
         {
@@ -1388,7 +1408,9 @@
         "fields": [
           {
             "name": "bump",
-            "docs": ["PDA bump"],
+            "docs": [
+              "PDA bump"
+            ],
             "type": "u8"
           },
           {
@@ -1407,7 +1429,10 @@
           {
             "name": "padding1",
             "type": {
-              "array": ["u8", 5]
+              "array": [
+                "u8",
+                5
+              ]
             }
           },
           {
@@ -1423,19 +1448,25 @@
           },
           {
             "name": "collectFeeAdmin",
-            "docs": ["Admin who can collect fees from the market"],
+            "docs": [
+              "Admin who can collect fees from the market"
+            ],
             "type": "publicKey"
           },
           {
             "name": "openOrdersAdmin",
-            "docs": ["Admin who must sign off on all order creations"],
+            "docs": [
+              "Admin who must sign off on all order creations"
+            ],
             "type": {
               "defined": "NonZeroPubkeyOption"
             }
           },
           {
             "name": "consumeEventsAdmin",
-            "docs": ["Admin who must sign off on all event consumptions"],
+            "docs": [
+              "Admin who must sign off on all event consumptions"
+            ],
             "type": {
               "defined": "NonZeroPubkeyOption"
             }
@@ -1451,29 +1482,42 @@
           },
           {
             "name": "name",
-            "docs": ["Name. Trailing zero bytes are ignored."],
+            "docs": [
+              "Name. Trailing zero bytes are ignored."
+            ],
             "type": {
-              "array": ["u8", 16]
+              "array": [
+                "u8",
+                16
+              ]
             }
           },
           {
             "name": "bids",
-            "docs": ["Address of the BookSide account for bids"],
+            "docs": [
+              "Address of the BookSide account for bids"
+            ],
             "type": "publicKey"
           },
           {
             "name": "asks",
-            "docs": ["Address of the BookSide account for asks"],
+            "docs": [
+              "Address of the BookSide account for asks"
+            ],
             "type": "publicKey"
           },
           {
             "name": "eventQueue",
-            "docs": ["Address of the EventQueue account"],
+            "docs": [
+              "Address of the EventQueue account"
+            ],
             "type": "publicKey"
           },
           {
             "name": "oracleA",
-            "docs": ["Oracles account address"],
+            "docs": [
+              "Oracles account address"
+            ],
             "type": {
               "defined": "NonZeroPubkeyOption"
             }
@@ -1486,7 +1530,9 @@
           },
           {
             "name": "oracleConfig",
-            "docs": ["Oracle configuration"],
+            "docs": [
+              "Oracle configuration"
+            ],
             "type": {
               "defined": "OracleConfig"
             }
@@ -1515,12 +1561,16 @@
           },
           {
             "name": "seqNum",
-            "docs": ["Total number of orders seen"],
+            "docs": [
+              "Total number of orders seen"
+            ],
             "type": "u64"
           },
           {
             "name": "registrationTime",
-            "docs": ["Timestamp in seconds that the market was registered at."],
+            "docs": [
+              "Timestamp in seconds that the market was registered at."
+            ],
             "type": "u64"
           },
           {
@@ -1536,12 +1586,16 @@
           },
           {
             "name": "takerFee",
-            "docs": ["Fee (in 10^-6) for taker orders, always >= 0."],
+            "docs": [
+              "Fee (in 10^-6) for taker orders, always >= 0."
+            ],
             "type": "i64"
           },
           {
             "name": "feesAccrued",
-            "docs": ["Total fees accrued in native quote"],
+            "docs": [
+              "Total fees accrued in native quote"
+            ],
             "type": "u64"
           },
           {
@@ -1590,7 +1644,10 @@
           {
             "name": "reserved",
             "type": {
-              "array": ["u8", 1768]
+              "array": [
+                "u8",
+                1768
+              ]
             }
           }
         ]
@@ -1612,7 +1669,10 @@
           {
             "name": "name",
             "type": {
-              "array": ["u8", 32]
+              "array": [
+                "u8",
+                32
+              ]
             }
           },
           {
@@ -1632,7 +1692,10 @@
           {
             "name": "padding",
             "type": {
-              "array": ["u8", 3]
+              "array": [
+                "u8",
+                3
+              ]
             }
           },
           {
@@ -1675,7 +1738,10 @@
           {
             "name": "padding",
             "type": {
-              "array": ["u8", 3]
+              "array": [
+                "u8",
+                3
+              ]
             }
           },
           {
@@ -1689,7 +1755,10 @@
           {
             "name": "reserved",
             "type": {
-              "array": ["u8", 20]
+              "array": [
+                "u8",
+                20
+              ]
             }
           }
         ]
@@ -1721,7 +1790,10 @@
           {
             "name": "reserved",
             "type": {
-              "array": ["u8", 128]
+              "array": [
+                "u8",
+                128
+              ]
             }
           }
         ]
@@ -1757,7 +1829,10 @@
           {
             "name": "reserved",
             "type": {
-              "array": ["u8", 256]
+              "array": [
+                "u8",
+                256
+              ]
             }
           },
           {
@@ -1801,7 +1876,10 @@
           {
             "name": "reserved",
             "type": {
-              "array": ["u8", 64]
+              "array": [
+                "u8",
+                64
+              ]
             }
           }
         ]
@@ -1811,7 +1889,9 @@
   "types": [
     {
       "name": "NonZeroPubkeyOption",
-      "docs": ["Like `Option`, but implemented for `Pubkey`."],
+      "docs": [
+        "Like `Option`, but implemented for `Pubkey`."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -1829,12 +1909,16 @@
         "fields": [
           {
             "name": "bidsBaseLots",
-            "docs": ["Base lots in open bids"],
+            "docs": [
+              "Base lots in open bids"
+            ],
             "type": "i64"
           },
           {
             "name": "asksBaseLots",
-            "docs": ["Base lots in open asks"],
+            "docs": [
+              "Base lots in open asks"
+            ],
             "type": "i64"
           },
           {
@@ -1870,7 +1954,10 @@
           {
             "name": "reserved",
             "type": {
-              "array": ["u8", 88]
+              "array": [
+                "u8",
+                88
+              ]
             }
           }
         ]
@@ -1891,7 +1978,9 @@
           },
           {
             "name": "lockedPrice",
-            "docs": ["Price at which user's assets were locked"],
+            "docs": [
+              "Price at which user's assets were locked"
+            ],
             "type": "i64"
           },
           {
@@ -1905,13 +1994,19 @@
           {
             "name": "padding",
             "type": {
-              "array": ["u8", 6]
+              "array": [
+                "u8",
+                6
+              ]
             }
           },
           {
             "name": "reserved",
             "type": {
-              "array": ["u8", 32]
+              "array": [
+                "u8",
+                32
+              ]
             }
           }
         ]
@@ -1935,7 +2030,10 @@
           {
             "name": "reserved",
             "type": {
-              "array": ["u8", 72]
+              "array": [
+                "u8",
+                72
+              ]
             }
           }
         ]
@@ -1978,7 +2076,10 @@
           {
             "name": "padding",
             "type": {
-              "array": ["u8", 3]
+              "array": [
+                "u8",
+                3
+              ]
             }
           },
           {
@@ -1991,14 +2092,21 @@
           },
           {
             "name": "key",
-            "docs": ["only the top `prefix_len` bits of `key` are relevant"],
+            "docs": [
+              "only the top `prefix_len` bits of `key` are relevant"
+            ],
             "type": "u128"
           },
           {
             "name": "children",
-            "docs": ["indexes into `BookSide::nodes`"],
+            "docs": [
+              "indexes into `BookSide::nodes`"
+            ],
             "type": {
-              "array": ["u32", 2]
+              "array": [
+                "u32",
+                2
+              ]
             }
           },
           {
@@ -2010,13 +2118,19 @@
               "iterate through the whole bookside."
             ],
             "type": {
-              "array": ["u64", 2]
+              "array": [
+                "u64",
+                2
+              ]
             }
           },
           {
             "name": "reserved",
             "type": {
-              "array": ["u8", 72]
+              "array": [
+                "u8",
+                72
+              ]
             }
           }
         ]
@@ -2024,18 +2138,24 @@
     },
     {
       "name": "LeafNode",
-      "docs": ["LeafNodes represent an order in the binary tree"],
+      "docs": [
+        "LeafNodes represent an order in the binary tree"
+      ],
       "type": {
         "kind": "struct",
         "fields": [
           {
             "name": "tag",
-            "docs": ["NodeTag"],
+            "docs": [
+              "NodeTag"
+            ],
             "type": "u8"
           },
           {
             "name": "ownerSlot",
-            "docs": ["Index into the owning OpenOrdersAccount's OpenOrders"],
+            "docs": [
+              "Index into the owning OpenOrdersAccount's OpenOrders"
+            ],
             "type": "u8"
           },
           {
@@ -2049,27 +2169,38 @@
           {
             "name": "padding",
             "type": {
-              "array": ["u8", 4]
+              "array": [
+                "u8",
+                4
+              ]
             }
           },
           {
             "name": "key",
-            "docs": ["The binary tree key, see new_node_key()"],
+            "docs": [
+              "The binary tree key, see new_node_key()"
+            ],
             "type": "u128"
           },
           {
             "name": "owner",
-            "docs": ["Address of the owning OpenOrdersAccount"],
+            "docs": [
+              "Address of the owning OpenOrdersAccount"
+            ],
             "type": "publicKey"
           },
           {
             "name": "quantity",
-            "docs": ["Number of base lots to buy or sell, always >=1"],
+            "docs": [
+              "Number of base lots to buy or sell, always >=1"
+            ],
             "type": "i64"
           },
           {
             "name": "timestamp",
-            "docs": ["The time the order was placed"],
+            "docs": [
+              "The time the order was placed"
+            ],
             "type": "u64"
           },
           {
@@ -2084,13 +2215,18 @@
           },
           {
             "name": "clientOrderId",
-            "docs": ["User defined id for this order, used in FillEvents"],
+            "docs": [
+              "User defined id for this order, used in FillEvents"
+            ],
             "type": "u64"
           },
           {
             "name": "reserved",
             "type": {
-              "array": ["u8", 32]
+              "array": [
+                "u8",
+                32
+              ]
             }
           }
         ]
@@ -2108,7 +2244,10 @@
           {
             "name": "data",
             "type": {
-              "array": ["u8", 119]
+              "array": [
+                "u8",
+                119
+              ]
             }
           }
         ]
@@ -2147,7 +2286,10 @@
           {
             "name": "padding",
             "type": {
-              "array": ["u8", 3]
+              "array": [
+                "u8",
+                3
+              ]
             }
           },
           {
@@ -2165,7 +2307,10 @@
           {
             "name": "reserved",
             "type": {
-              "array": ["u8", 512]
+              "array": [
+                "u8",
+                512
+              ]
             }
           },
           {
@@ -2226,7 +2371,10 @@
           {
             "name": "pad",
             "type": {
-              "array": ["u8", 4]
+              "array": [
+                "u8",
+                4
+              ]
             }
           },
           {
@@ -2250,7 +2398,10 @@
           {
             "name": "padding",
             "type": {
-              "array": ["u8", 143]
+              "array": [
+                "u8",
+                143
+              ]
             }
           }
         ]
@@ -2280,7 +2431,10 @@
           {
             "name": "padding",
             "type": {
-              "array": ["u8", 4]
+              "array": [
+                "u8",
+                4
+              ]
             }
           },
           {
@@ -2326,7 +2480,10 @@
           {
             "name": "reserved",
             "type": {
-              "array": ["u8", 8]
+              "array": [
+                "u8",
+                8
+              ]
             }
           }
         ]
@@ -2352,7 +2509,10 @@
           {
             "name": "padding0",
             "type": {
-              "array": ["u8", 5]
+              "array": [
+                "u8",
+                5
+              ]
             }
           },
           {
@@ -2374,7 +2534,10 @@
           {
             "name": "padding1",
             "type": {
-              "array": ["u8", 80]
+              "array": [
+                "u8",
+                80
+              ]
             }
           }
         ]
