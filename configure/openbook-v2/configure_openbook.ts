@@ -156,7 +156,7 @@ export class OpenbookConfigurator {
           oracleA: marketData.oracle_a,
           oracleB: marketData.oracle_b,
           signer: userKp.publicKey,
-          tokenDepositAccount: user.token_data[0].token_account,
+          userTokenAccount: user.token_data[0].token_account,
           systemProgram: web3.SystemProgram.programId,
           tokenProgram: TOKEN_PROGRAM_ID,
           openOrdersAdmin: null,
@@ -194,7 +194,7 @@ export class OpenbookConfigurator {
           oracleA: marketData.oracle_a,
           oracleB: marketData.oracle_b,
           signer: userKp.publicKey,
-          tokenDepositAccount: user.token_data
+          userTokenAccount: user.token_data
             .filter((x) => x.mint === marketData.base_mint)
             .at(0)?.token_account,
           systemProgram: web3.SystemProgram.programId,
