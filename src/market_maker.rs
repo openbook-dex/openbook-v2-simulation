@@ -72,7 +72,7 @@ fn create_market_making_instructions(
             oracle_a: Some(market.oracle_a),
             oracle_b: Some(market.oracle_b),
             signer: user.secret.pubkey(),
-            token_deposit_account: user.token_data[0].token_account,
+            user_token_account: user.token_data[0].token_account,
             system_program: anchor_client::solana_sdk::system_program::id(),
             token_program: anchor_spl::token::ID,
         };
@@ -111,7 +111,7 @@ fn create_market_making_instructions(
             oracle_a: Some(market.oracle_a),
             oracle_b: Some(market.oracle_b),
             signer: user.secret.pubkey(),
-            token_deposit_account: market.base_vault,
+            user_token_account: market.base_vault,
             system_program: anchor_client::solana_sdk::system_program::id(),
             token_program: anchor_spl::token::ID,
         };
