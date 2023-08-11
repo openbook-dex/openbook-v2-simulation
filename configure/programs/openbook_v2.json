@@ -43,12 +43,12 @@
           "isSigner": true
         },
         {
-          "name": "baseVault",
+          "name": "marketBaseVault",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "quoteVault",
+          "name": "marketQuoteVault",
           "isMut": true,
           "isSigner": false
         },
@@ -353,7 +353,7 @@
           "isOptional": true
         },
         {
-          "name": "tokenDepositAccount",
+          "name": "userTokenAccount",
           "isMut": true,
           "isSigner": false
         },
@@ -441,12 +441,12 @@
           "isOptional": true
         },
         {
-          "name": "tokenQuoteDepositAccount",
+          "name": "userQuoteAccount",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "tokenBaseDepositAccount",
+          "name": "userBaseAccount",
           "isMut": true,
           "isSigner": false
         },
@@ -545,7 +545,7 @@
           "isOptional": true
         },
         {
-          "name": "tokenDepositAccount",
+          "name": "userTokenAccount",
           "isMut": true,
           "isSigner": false
         },
@@ -644,12 +644,12 @@
           "isSigner": false
         },
         {
-          "name": "baseVault",
+          "name": "marketBaseVault",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "quoteVault",
+          "name": "marketQuoteVault",
           "isMut": true,
           "isSigner": false
         },
@@ -659,17 +659,17 @@
           "isSigner": false
         },
         {
-          "name": "tokenDepositAccount",
+          "name": "userBaseAccount",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "tokenReceiverAccount",
+          "name": "userQuoteAccount",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "referrer",
+          "name": "referrerAccount",
           "isMut": true,
           "isSigner": false,
           "isOptional": true
@@ -943,12 +943,12 @@
           "isSigner": true
         },
         {
-          "name": "tokenBaseAccount",
+          "name": "userBaseAccount",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "tokenQuoteAccount",
+          "name": "userQuoteAccount",
           "isMut": true,
           "isSigner": false
         },
@@ -963,12 +963,12 @@
           "isSigner": false
         },
         {
-          "name": "baseVault",
+          "name": "marketBaseVault",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "quoteVault",
+          "name": "marketQuoteVault",
           "isMut": true,
           "isSigner": false
         },
@@ -1010,12 +1010,12 @@
           "isSigner": true
         },
         {
-          "name": "tokenBaseAccount",
+          "name": "userBaseAccount",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "tokenQuoteAccount",
+          "name": "userQuoteAccount",
           "isMut": true,
           "isSigner": false
         },
@@ -1030,12 +1030,12 @@
           "isSigner": false
         },
         {
-          "name": "baseVault",
+          "name": "marketBaseVault",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "quoteVault",
+          "name": "marketQuoteVault",
           "isMut": true,
           "isSigner": false
         },
@@ -1088,27 +1088,27 @@
           "isSigner": false
         },
         {
-          "name": "baseVault",
+          "name": "marketBaseVault",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "quoteVault",
+          "name": "marketQuoteVault",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "tokenBaseAccount",
+          "name": "userBaseAccount",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "tokenQuoteAccount",
+          "name": "userQuoteAccount",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "referrer",
+          "name": "referrerAccount",
           "isMut": true,
           "isSigner": false,
           "isOptional": true
@@ -1153,27 +1153,27 @@
           "isSigner": false
         },
         {
-          "name": "baseVault",
+          "name": "marketBaseVault",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "quoteVault",
+          "name": "marketQuoteVault",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "tokenBaseAccount",
+          "name": "userBaseAccount",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "tokenQuoteAccount",
+          "name": "userQuoteAccount",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "referrer",
+          "name": "referrerAccount",
           "isMut": true,
           "isSigner": false,
           "isOptional": true
@@ -1213,7 +1213,7 @@
           "isSigner": false
         },
         {
-          "name": "quoteVault",
+          "name": "marketQuoteVault",
           "isMut": true,
           "isSigner": false
         },
@@ -1626,7 +1626,7 @@
             "type": "publicKey"
           },
           {
-            "name": "baseVault",
+            "name": "marketBaseVault",
             "type": "publicKey"
           },
           {
@@ -1634,7 +1634,7 @@
             "type": "u64"
           },
           {
-            "name": "quoteVault",
+            "name": "marketQuoteVault",
             "type": "publicKey"
           },
           {

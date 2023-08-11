@@ -43,12 +43,12 @@ export type OpenbookV2 = {
           "isSigner": true
         },
         {
-          "name": "baseVault",
+          "name": "marketBaseVault",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "quoteVault",
+          "name": "marketQuoteVault",
           "isMut": true,
           "isSigner": false
         },
@@ -353,7 +353,7 @@ export type OpenbookV2 = {
           "isOptional": true
         },
         {
-          "name": "tokenDepositAccount",
+          "name": "userTokenAccount",
           "isMut": true,
           "isSigner": false
         },
@@ -441,12 +441,12 @@ export type OpenbookV2 = {
           "isOptional": true
         },
         {
-          "name": "tokenQuoteDepositAccount",
+          "name": "userQuoteAccount",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "tokenBaseDepositAccount",
+          "name": "userBaseAccount",
           "isMut": true,
           "isSigner": false
         },
@@ -545,7 +545,7 @@ export type OpenbookV2 = {
           "isOptional": true
         },
         {
-          "name": "tokenDepositAccount",
+          "name": "userTokenAccount",
           "isMut": true,
           "isSigner": false
         },
@@ -644,12 +644,12 @@ export type OpenbookV2 = {
           "isSigner": false
         },
         {
-          "name": "baseVault",
+          "name": "marketBaseVault",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "quoteVault",
+          "name": "marketQuoteVault",
           "isMut": true,
           "isSigner": false
         },
@@ -659,17 +659,17 @@ export type OpenbookV2 = {
           "isSigner": false
         },
         {
-          "name": "tokenDepositAccount",
+          "name": "userBaseAccount",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "tokenReceiverAccount",
+          "name": "userQuoteAccount",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "referrer",
+          "name": "referrerAccount",
           "isMut": true,
           "isSigner": false,
           "isOptional": true
@@ -943,12 +943,12 @@ export type OpenbookV2 = {
           "isSigner": true
         },
         {
-          "name": "tokenBaseAccount",
+          "name": "userBaseAccount",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "tokenQuoteAccount",
+          "name": "userQuoteAccount",
           "isMut": true,
           "isSigner": false
         },
@@ -963,12 +963,12 @@ export type OpenbookV2 = {
           "isSigner": false
         },
         {
-          "name": "baseVault",
+          "name": "marketBaseVault",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "quoteVault",
+          "name": "marketQuoteVault",
           "isMut": true,
           "isSigner": false
         },
@@ -1010,12 +1010,12 @@ export type OpenbookV2 = {
           "isSigner": true
         },
         {
-          "name": "tokenBaseAccount",
+          "name": "userBaseAccount",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "tokenQuoteAccount",
+          "name": "userQuoteAccount",
           "isMut": true,
           "isSigner": false
         },
@@ -1030,12 +1030,12 @@ export type OpenbookV2 = {
           "isSigner": false
         },
         {
-          "name": "baseVault",
+          "name": "marketBaseVault",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "quoteVault",
+          "name": "marketQuoteVault",
           "isMut": true,
           "isSigner": false
         },
@@ -1088,27 +1088,27 @@ export type OpenbookV2 = {
           "isSigner": false
         },
         {
-          "name": "baseVault",
+          "name": "marketBaseVault",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "quoteVault",
+          "name": "marketQuoteVault",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "tokenBaseAccount",
+          "name": "userBaseAccount",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "tokenQuoteAccount",
+          "name": "userQuoteAccount",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "referrer",
+          "name": "referrerAccount",
           "isMut": true,
           "isSigner": false,
           "isOptional": true
@@ -1153,27 +1153,27 @@ export type OpenbookV2 = {
           "isSigner": false
         },
         {
-          "name": "baseVault",
+          "name": "marketBaseVault",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "quoteVault",
+          "name": "marketQuoteVault",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "tokenBaseAccount",
+          "name": "userBaseAccount",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "tokenQuoteAccount",
+          "name": "userQuoteAccount",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "referrer",
+          "name": "referrerAccount",
           "isMut": true,
           "isSigner": false,
           "isOptional": true
@@ -1213,7 +1213,7 @@ export type OpenbookV2 = {
           "isSigner": false
         },
         {
-          "name": "quoteVault",
+          "name": "marketQuoteVault",
           "isMut": true,
           "isSigner": false
         },
@@ -1626,7 +1626,7 @@ export type OpenbookV2 = {
             "type": "publicKey"
           },
           {
-            "name": "baseVault",
+            "name": "marketBaseVault",
             "type": "publicKey"
           },
           {
@@ -1634,7 +1634,7 @@ export type OpenbookV2 = {
             "type": "u64"
           },
           {
-            "name": "quoteVault",
+            "name": "marketQuoteVault",
             "type": "publicKey"
           },
           {
@@ -3537,12 +3537,12 @@ export const IDL: OpenbookV2 = {
           "isSigner": true
         },
         {
-          "name": "baseVault",
+          "name": "marketBaseVault",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "quoteVault",
+          "name": "marketQuoteVault",
           "isMut": true,
           "isSigner": false
         },
@@ -3847,7 +3847,7 @@ export const IDL: OpenbookV2 = {
           "isOptional": true
         },
         {
-          "name": "tokenDepositAccount",
+          "name": "userTokenAccount",
           "isMut": true,
           "isSigner": false
         },
@@ -3935,12 +3935,12 @@ export const IDL: OpenbookV2 = {
           "isOptional": true
         },
         {
-          "name": "tokenQuoteDepositAccount",
+          "name": "userQuoteAccount",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "tokenBaseDepositAccount",
+          "name": "userBaseAccount",
           "isMut": true,
           "isSigner": false
         },
@@ -4039,7 +4039,7 @@ export const IDL: OpenbookV2 = {
           "isOptional": true
         },
         {
-          "name": "tokenDepositAccount",
+          "name": "userTokenAccount",
           "isMut": true,
           "isSigner": false
         },
@@ -4138,12 +4138,12 @@ export const IDL: OpenbookV2 = {
           "isSigner": false
         },
         {
-          "name": "baseVault",
+          "name": "marketBaseVault",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "quoteVault",
+          "name": "marketQuoteVault",
           "isMut": true,
           "isSigner": false
         },
@@ -4153,17 +4153,17 @@ export const IDL: OpenbookV2 = {
           "isSigner": false
         },
         {
-          "name": "tokenDepositAccount",
+          "name": "userBaseAccount",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "tokenReceiverAccount",
+          "name": "userQuoteAccount",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "referrer",
+          "name": "referrerAccount",
           "isMut": true,
           "isSigner": false,
           "isOptional": true
@@ -4437,12 +4437,12 @@ export const IDL: OpenbookV2 = {
           "isSigner": true
         },
         {
-          "name": "tokenBaseAccount",
+          "name": "userBaseAccount",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "tokenQuoteAccount",
+          "name": "userQuoteAccount",
           "isMut": true,
           "isSigner": false
         },
@@ -4457,12 +4457,12 @@ export const IDL: OpenbookV2 = {
           "isSigner": false
         },
         {
-          "name": "baseVault",
+          "name": "marketBaseVault",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "quoteVault",
+          "name": "marketQuoteVault",
           "isMut": true,
           "isSigner": false
         },
@@ -4504,12 +4504,12 @@ export const IDL: OpenbookV2 = {
           "isSigner": true
         },
         {
-          "name": "tokenBaseAccount",
+          "name": "userBaseAccount",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "tokenQuoteAccount",
+          "name": "userQuoteAccount",
           "isMut": true,
           "isSigner": false
         },
@@ -4524,12 +4524,12 @@ export const IDL: OpenbookV2 = {
           "isSigner": false
         },
         {
-          "name": "baseVault",
+          "name": "marketBaseVault",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "quoteVault",
+          "name": "marketQuoteVault",
           "isMut": true,
           "isSigner": false
         },
@@ -4582,27 +4582,27 @@ export const IDL: OpenbookV2 = {
           "isSigner": false
         },
         {
-          "name": "baseVault",
+          "name": "marketBaseVault",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "quoteVault",
+          "name": "marketQuoteVault",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "tokenBaseAccount",
+          "name": "userBaseAccount",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "tokenQuoteAccount",
+          "name": "userQuoteAccount",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "referrer",
+          "name": "referrerAccount",
           "isMut": true,
           "isSigner": false,
           "isOptional": true
@@ -4647,27 +4647,27 @@ export const IDL: OpenbookV2 = {
           "isSigner": false
         },
         {
-          "name": "baseVault",
+          "name": "marketBaseVault",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "quoteVault",
+          "name": "marketQuoteVault",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "tokenBaseAccount",
+          "name": "userBaseAccount",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "tokenQuoteAccount",
+          "name": "userQuoteAccount",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "referrer",
+          "name": "referrerAccount",
           "isMut": true,
           "isSigner": false,
           "isOptional": true
@@ -4707,7 +4707,7 @@ export const IDL: OpenbookV2 = {
           "isSigner": false
         },
         {
-          "name": "quoteVault",
+          "name": "marketQuoteVault",
           "isMut": true,
           "isSigner": false
         },
@@ -5120,7 +5120,7 @@ export const IDL: OpenbookV2 = {
             "type": "publicKey"
           },
           {
-            "name": "baseVault",
+            "name": "marketBaseVault",
             "type": "publicKey"
           },
           {
@@ -5128,7 +5128,7 @@ export const IDL: OpenbookV2 = {
             "type": "u64"
           },
           {
-            "name": "quoteVault",
+            "name": "marketQuoteVault",
             "type": "publicKey"
           },
           {
