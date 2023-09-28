@@ -4,10 +4,10 @@ import {
   TOKEN_PROGRAM_ID,
   getAssociatedTokenAddressSync,
 } from "@solana/spl-token";
-import { Program, web3, BN } from "@project-serum/anchor";
+import { BorshAccountsCoder, Program, web3, BN } from "@project-serum/anchor";
 import { createAccount } from "../general/solana_utils";
 import { MintUtils } from "../general/mint_utils";
-import { OpenbookV2 } from "./openbook_v2";
+import { IDL, OpenbookV2 } from "./openbook_v2";
 import { TestProvider } from "../anchor_utils";
 
 export interface Market {
@@ -31,6 +31,14 @@ function getRandomInt(max: number) {
   return Math.floor(Math.random() * max) + 100;
 }
 
+function getAccountSize(name: string) {
+  const coder = new BorshAccountsCoder(IDL);
+  const idlAccount = IDL.accounts?.filter(
+    (idlAccount) => idlAccount.name === name,
+  )[0];
+  return coder.size(idlAccount);
+}
+
 export async function createMarket(
   program: Program<OpenbookV2>,
   anchorProvider: TestProvider,
@@ -41,14 +49,6 @@ export async function createMarket(
   quoteMint: PublicKey,
   index: number,
 ): Promise<Market> {
-  // const transaction = new web3.Transaction().add(
-  //   web3.SystemProgram.transfer({
-  //     fromPubkey: anchorProvider.keypair.publicKey,
-  //     toPubkey: adminKp.publicKey,
-  //     lamports: 1 * LAMPORTS_PER_SOL,
-  //   })
-  // );
-  // await anchorProvider.sendAndConfirm(transaction, [anchorProvider.keypair]);
   adminKp = anchorProvider.keypair;
 
   let [oracleAId, _tmp1] = PublicKey.findProgramAddressSync(
@@ -114,23 +114,22 @@ export async function createMarket(
     .signers([adminKp])
     .rpc();
 
-  // bookside size = 123720
   let asks = await createAccount(
     anchorProvider.connection,
     anchorProvider.keypair,
-    123720,
+    getAccountSize("bookSide"),
     openbookProgramId,
   );
   let bids = await createAccount(
     anchorProvider.connection,
     anchorProvider.keypair,
-    123720,
+    getAccountSize("bookSide"),
     openbookProgramId,
   );
   let eventHeap = await createAccount(
     anchorProvider.connection,
     anchorProvider.keypair,
-    91288,
+    getAccountSize("eventHeap"),
     openbookProgramId,
   );
 
