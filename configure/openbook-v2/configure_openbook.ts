@@ -61,63 +61,57 @@ export class OpenbookConfigurator {
     user: Keypair,
     markets: Market[],
   ): Promise<OpenOrders[]> {
-    const openOrders = await Promise.all(
-      markets.map(async (market) => {
-        let accountIndex = new BN(1);
-
-        let [openOrdersIndexer, _tmp1] = PublicKey.findProgramAddressSync(
-          [
-            Buffer.from("OpenOrdersIndexer"),
-            user.publicKey.toBuffer(),
-            market.market_pk.toBuffer(),
-          ],
-          this.openbookProgramId,
-        );
-        await this.program.methods
-          .createOpenOrdersIndexer()
-          .accounts({
-            openOrdersIndexer,
-            market: market.market_pk,
-            owner: user.publicKey,
-            payer: this.anchorProvider.keypair.publicKey,
-            systemProgram: web3.SystemProgram.programId,
-          })
-          .signers([user])
-          .rpc();
-
-        let [openOrders, _tmp] = PublicKey.findProgramAddressSync(
-          [
-            Buffer.from("OpenOrders"),
-            user.publicKey.toBuffer(),
-            market.market_pk.toBuffer(),
-            accountIndex.toBuffer("le", 4),
-          ],
-          this.openbookProgramId,
-        );
-
-        await this.program.methods
-          .createOpenOrdersAccount()
-          .accounts({
-            openOrdersIndexer,
-            openOrdersAccount: openOrders,
-            market: market.market_pk,
-            owner: user.publicKey,
-            delegateAccount: null,
-            payer: this.anchorProvider.keypair.publicKey,
-            systemProgram: web3.SystemProgram.programId,
-          })
-          .signers([user])
-          .rpc();
-        return [market.market_pk, openOrders];
-      }),
+    let [openOrdersIndexer, _tmp1] = PublicKey.findProgramAddressSync(
+      [Buffer.from("OpenOrdersIndexer"), user.publicKey.toBuffer()],
+      this.openbookProgramId,
     );
+    await this.program.methods
+      .createOpenOrdersIndexer()
+      .accounts({
+        openOrdersIndexer,
+        owner: user.publicKey,
+        payer: this.anchorProvider.keypair.publicKey,
+        systemProgram: web3.SystemProgram.programId,
+      })
+      .signers([user])
+      .rpc();
 
-    return openOrders.map((x) => {
-      return {
-        market: x[0],
-        open_orders: x[1],
-      };
-    });
+    const openOrdersAccs = [];
+    for (let i = 0; i < markets.length; ++i) {
+      const market = markets[i];
+      const accountIndex = new BN(i + 1);
+
+      let [openOrders, _tmp] = PublicKey.findProgramAddressSync(
+        [
+          Buffer.from("OpenOrders"),
+          user.publicKey.toBuffer(),
+          market.market_pk.toBuffer(),
+          accountIndex.toBuffer("le", 4),
+        ],
+        this.openbookProgramId,
+      );
+
+      await this.program.methods
+        .createOpenOrdersAccount()
+        .accounts({
+          openOrdersIndexer,
+          openOrdersAccount: openOrders,
+          market: market.market_pk,
+          owner: user.publicKey,
+          delegateAccount: null,
+          payer: this.anchorProvider.keypair.publicKey,
+          systemProgram: web3.SystemProgram.programId,
+        })
+        .signers([user])
+        .rpc();
+
+      openOrdersAccs.push({
+        market: market.market_pk,
+        open_orders: openOrders,
+      });
+    }
+
+    return openOrdersAccs;
   }
 
   public async fillOrderBook(
@@ -149,7 +143,7 @@ export class OpenbookConfigurator {
           asks: marketData.asks,
           marketVault: marketData.quote_vault,
           bids: marketData.bids,
-          eventQueue: marketData.event_queue,
+          eventHeap: marketData.event_heap,
           market: marketData.market_pk,
           openOrdersAccount:
             user.open_orders[marketData.market_index].open_orders,
@@ -157,7 +151,6 @@ export class OpenbookConfigurator {
           oracleB: marketData.oracle_b,
           signer: userKp.publicKey,
           userTokenAccount: user.token_data[0].token_account,
-          systemProgram: web3.SystemProgram.programId,
           tokenProgram: TOKEN_PROGRAM_ID,
           openOrdersAdmin: null,
         })
@@ -187,7 +180,7 @@ export class OpenbookConfigurator {
           asks: marketData.asks,
           marketVault: marketData.base_vault,
           bids: marketData.bids,
-          eventQueue: marketData.event_queue,
+          eventHeap: marketData.event_heap,
           market: marketData.market_pk,
           openOrdersAccount:
             user.open_orders[marketData.market_index].open_orders,
@@ -197,7 +190,6 @@ export class OpenbookConfigurator {
           userTokenAccount: user.token_data
             .filter((x) => x.mint === marketData.base_mint)
             .at(0)?.token_account,
-          systemProgram: web3.SystemProgram.programId,
           tokenProgram: TOKEN_PROGRAM_ID,
           openOrdersAdmin: null,
         })

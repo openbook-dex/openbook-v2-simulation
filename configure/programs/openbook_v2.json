@@ -33,7 +33,7 @@
           "isSigner": false
         },
         {
-          "name": "eventQueue",
+          "name": "eventHeap",
           "isMut": true,
           "isSigner": false
         },
@@ -64,6 +64,16 @@
         },
         {
           "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
           "isMut": false,
           "isSigner": false
         },
@@ -149,7 +159,8 @@
     {
       "name": "closeMarket",
       "docs": [
-        "Close a [`Market`](crate::state::Market)."
+        "Close a [`Market`](crate::state::Market) (only",
+        "[`close_market_admin`](crate::state::Market::close_market_admin))."
       ],
       "accounts": [
         {
@@ -173,7 +184,7 @@
           "isSigner": false
         },
         {
-          "name": "eventQueue",
+          "name": "eventHeap",
           "isMut": true,
           "isSigner": false
         },
@@ -192,6 +203,9 @@
     },
     {
       "name": "createOpenOrdersIndexer",
+      "docs": [
+        "Create an [`OpenOrdersIndexer`](crate::state::OpenOrdersIndexer) account."
+      ],
       "accounts": [
         {
           "name": "payer",
@@ -209,11 +223,6 @@
           "isSigner": false
         },
         {
-          "name": "market",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
           "name": "systemProgram",
           "isMut": false,
           "isSigner": false
@@ -223,6 +232,9 @@
     },
     {
       "name": "closeOpenOrdersIndexer",
+      "docs": [
+        "Close an [`OpenOrdersIndexer`](crate::state::OpenOrdersIndexer) account."
+      ],
       "accounts": [
         {
           "name": "owner",
@@ -249,6 +261,9 @@
     },
     {
       "name": "createOpenOrdersAccount",
+      "docs": [
+        "Create an [`OpenOrdersAccount`](crate::state::OpenOrdersAccount)."
+      ],
       "accounts": [
         {
           "name": "payer",
@@ -291,7 +306,15 @@
     },
     {
       "name": "closeOpenOrdersAccount",
+      "docs": [
+        "Close an [`OpenOrdersAccount`](crate::state::OpenOrdersAccount)."
+      ],
       "accounts": [
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
         {
           "name": "owner",
           "isMut": false,
@@ -310,6 +333,11 @@
         {
           "name": "solDestination",
           "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
           "isSigner": false
         }
       ],
@@ -373,7 +401,7 @@
           "isSigner": false
         },
         {
-          "name": "eventQueue",
+          "name": "eventHeap",
           "isMut": true,
           "isSigner": false
         },
@@ -398,11 +426,6 @@
           "name": "tokenProgram",
           "isMut": false,
           "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
         }
       ],
       "args": [
@@ -418,10 +441,189 @@
       }
     },
     {
+      "name": "editOrder",
+      "docs": [
+        "Edit an order."
+      ],
+      "accounts": [
+        {
+          "name": "signer",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "openOrdersAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "openOrdersAdmin",
+          "isMut": false,
+          "isSigner": true,
+          "isOptional": true
+        },
+        {
+          "name": "userTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "market",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "bids",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "asks",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "eventHeap",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "marketVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "oracleA",
+          "isMut": false,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "name": "oracleB",
+          "isMut": false,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "clientOrderId",
+          "type": "u64"
+        },
+        {
+          "name": "expectedCancelSize",
+          "type": "i64"
+        },
+        {
+          "name": "placeOrder",
+          "type": {
+            "defined": "PlaceOrderArgs"
+          }
+        }
+      ],
+      "returns": {
+        "option": "u128"
+      }
+    },
+    {
+      "name": "editOrderPegged",
+      "docs": [
+        "Edit an order pegged."
+      ],
+      "accounts": [
+        {
+          "name": "signer",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "openOrdersAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "openOrdersAdmin",
+          "isMut": false,
+          "isSigner": true,
+          "isOptional": true
+        },
+        {
+          "name": "userTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "market",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "bids",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "asks",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "eventHeap",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "marketVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "oracleA",
+          "isMut": false,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "name": "oracleB",
+          "isMut": false,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "clientOrderId",
+          "type": "u64"
+        },
+        {
+          "name": "expectedCancelSize",
+          "type": "i64"
+        },
+        {
+          "name": "placeOrder",
+          "type": {
+            "defined": "PlaceOrderPeggedArgs"
+          }
+        }
+      ],
+      "returns": {
+        "option": "u128"
+      }
+    },
+    {
       "name": "cancelAndPlaceOrders",
       "docs": [
-        "Cancel orders and place multiple orders.",
-        ""
+        "Cancel orders and place multiple orders."
       ],
       "accounts": [
         {
@@ -466,7 +668,7 @@
           "isSigner": false
         },
         {
-          "name": "eventQueue",
+          "name": "eventHeap",
           "isMut": true,
           "isSigner": false
         },
@@ -496,11 +698,6 @@
           "name": "tokenProgram",
           "isMut": false,
           "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
         }
       ],
       "args": [
@@ -527,6 +724,9 @@
     },
     {
       "name": "placeOrderPegged",
+      "docs": [
+        "Place an oracle-peg order."
+      ],
       "accounts": [
         {
           "name": "signer",
@@ -565,7 +765,7 @@
           "isSigner": false
         },
         {
-          "name": "eventQueue",
+          "name": "eventHeap",
           "isMut": true,
           "isSigner": false
         },
@@ -588,11 +788,6 @@
         },
         {
           "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
           "isMut": false,
           "isSigner": false
         }
@@ -620,7 +815,7 @@
       "accounts": [
         {
           "name": "signer",
-          "isMut": false,
+          "isMut": true,
           "isSigner": true
         },
         {
@@ -654,7 +849,7 @@
           "isSigner": false
         },
         {
-          "name": "eventQueue",
+          "name": "eventHeap",
           "isMut": true,
           "isSigner": false
         },
@@ -752,7 +947,7 @@
           "isSigner": false
         },
         {
-          "name": "eventQueue",
+          "name": "eventHeap",
           "isMut": true,
           "isSigner": false
         }
@@ -782,7 +977,7 @@
           "isSigner": false
         },
         {
-          "name": "eventQueue",
+          "name": "eventHeap",
           "isMut": true,
           "isSigner": false
         }
@@ -878,7 +1073,8 @@
           "name": "clientOrderId",
           "type": "u64"
         }
-      ]
+      ],
+      "returns": "i64"
     },
     {
       "name": "cancelAllOrders",
@@ -976,11 +1172,6 @@
           "name": "tokenProgram",
           "isMut": false,
           "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
         }
       ],
       "args": [
@@ -1043,11 +1234,6 @@
           "name": "tokenProgram",
           "isMut": false,
           "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
         }
       ],
       "args": [
@@ -1069,7 +1255,7 @@
       "accounts": [
         {
           "name": "owner",
-          "isMut": false,
+          "isMut": true,
           "isSigner": true
         },
         {
@@ -1129,12 +1315,18 @@
     {
       "name": "settleFundsExpired",
       "docs": [
-        "Withdraw any available tokens when the market is expired (only `close_market_admin`)"
+        "Withdraw any available tokens when the market is expired (only",
+        "[`close_market_admin`](crate::state::Market::close_market_admin))."
       ],
       "accounts": [
         {
           "name": "closeMarketAdmin",
           "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "payer",
+          "isMut": true,
           "isSigner": true
         },
         {
@@ -1226,17 +1418,15 @@
           "name": "tokenProgram",
           "isMut": false,
           "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
         }
       ],
       "args": []
     },
     {
       "name": "setDelegate",
+      "docs": [
+        "Update the [`delegate`](crate::state::OpenOrdersAccount::delegate) of an open orders account."
+      ],
       "accounts": [
         {
           "name": "owner",
@@ -1260,7 +1450,8 @@
     {
       "name": "setMarketExpired",
       "docs": [
-        "Set market to expired before pruning orders and closing the market"
+        "Set market to expired before pruning orders and closing the market (only",
+        "[`close_market_admin`](crate::state::Market::close_market_admin))."
       ],
       "accounts": [
         {
@@ -1278,6 +1469,10 @@
     },
     {
       "name": "pruneOrders",
+      "docs": [
+        "Remove orders from the book when the market is expired (only",
+        "[`close_market_admin`](crate::state::Market::close_market_admin))."
+      ],
       "accounts": [
         {
           "name": "closeMarketAdmin",
@@ -1344,9 +1539,7 @@
       "args": [
         {
           "name": "price",
-          "type": {
-            "defined": "I80F48"
-          }
+          "type": "f64"
         }
       ]
     },
@@ -1393,9 +1586,7 @@
       "args": [
         {
           "name": "price",
-          "type": {
-            "defined": "I80F48"
-          }
+          "type": "f64"
         }
       ]
     }
@@ -1507,9 +1698,9 @@
             "type": "publicKey"
           },
           {
-            "name": "eventQueue",
+            "name": "eventHeap",
             "docs": [
-              "Address of the EventQueue account"
+              "Address of the EventHeap account"
             ],
             "type": "publicKey"
           },
@@ -1571,7 +1762,7 @@
             "docs": [
               "Timestamp in seconds that the market was registered at."
             ],
-            "type": "u64"
+            "type": "i64"
           },
           {
             "name": "makerFee",
@@ -1596,26 +1787,42 @@
             "docs": [
               "Total fees accrued in native quote"
             ],
-            "type": "u64"
+            "type": "u128"
           },
           {
             "name": "feesToReferrers",
-            "type": "u64"
+            "docs": [
+              "Total fees settled in native quote"
+            ],
+            "type": "u128"
           },
           {
             "name": "referrerRebatesAccrued",
+            "docs": [
+              "Referrer rebates to be distributed"
+            ],
             "type": "u64"
           },
           {
             "name": "feesAvailable",
+            "docs": [
+              "Fees generated and available to withdraw via sweep_fees"
+            ],
             "type": "u64"
+          },
+          {
+            "name": "makerVolume",
+            "docs": [
+              "Cumulative maker volume (same as taker volume) in quote native units"
+            ],
+            "type": "u128"
           },
           {
             "name": "takerVolumeWoOo",
             "docs": [
               "Cumulative taker volume in quote native units due to place take orders"
             ],
-            "type": "u64"
+            "type": "u128"
           },
           {
             "name": "baseMint",
@@ -1646,7 +1853,7 @@
             "type": {
               "array": [
                 "u8",
-                1768
+                128
               ]
             }
           }
@@ -1711,7 +1918,7 @@
                 {
                   "defined": "OpenOrder"
                 },
-                128
+                24
               ]
             }
           }
@@ -1724,41 +1931,17 @@
         "kind": "struct",
         "fields": [
           {
-            "name": "owner",
-            "type": "publicKey"
-          },
-          {
-            "name": "market",
-            "type": "publicKey"
-          },
-          {
             "name": "bump",
             "type": "u8"
-          },
-          {
-            "name": "padding",
-            "type": {
-              "array": [
-                "u8",
-                3
-              ]
-            }
           },
           {
             "name": "createdCounter",
             "type": "u32"
           },
           {
-            "name": "closedCounter",
-            "type": "u32"
-          },
-          {
-            "name": "reserved",
+            "name": "addresses",
             "type": {
-              "array": [
-                "u8",
-                20
-              ]
+              "vec": "publicKey"
             }
           }
         ]
@@ -1779,20 +1962,26 @@
           },
           {
             "name": "price",
-            "type": {
-              "defined": "I80F48"
-            }
+            "type": "f64"
           },
           {
-            "name": "lastUpdated",
+            "name": "lastUpdateTs",
             "type": "i64"
+          },
+          {
+            "name": "lastUpdateSlot",
+            "type": "u64"
+          },
+          {
+            "name": "deviation",
+            "type": "f64"
           },
           {
             "name": "reserved",
             "type": {
               "array": [
                 "u8",
-                128
+                104
               ]
             }
           }
@@ -1845,7 +2034,7 @@
       }
     },
     {
-      "name": "EventQueue",
+      "name": "EventHeap",
       "docs": [
         "Container for the different EventTypes.",
         "",
@@ -1859,7 +2048,7 @@
           {
             "name": "header",
             "type": {
-              "defined": "EventQueueHeader"
+              "defined": "EventHeapHeader"
             }
           },
           {
@@ -1938,25 +2127,33 @@
             "type": "u64"
           },
           {
+            "name": "penaltyHeapCount",
+            "docs": [
+              "Count of ixs when events are added to the heap",
+              "To avoid this, send remaining accounts in order to process the events"
+            ],
+            "type": "u64"
+          },
+          {
             "name": "makerVolume",
             "docs": [
               "Cumulative maker volume in quote native units (display only)"
             ],
-            "type": "u64"
+            "type": "u128"
           },
           {
             "name": "takerVolume",
             "docs": [
               "Cumulative taker volume in quote native units (display only)"
             ],
-            "type": "u64"
+            "type": "u128"
           },
           {
             "name": "reserved",
             "type": {
               "array": [
                 "u8",
-                88
+                72
               ]
             }
           }
@@ -1999,15 +2196,6 @@
                 6
               ]
             }
-          },
-          {
-            "name": "reserved",
-            "type": {
-              "array": [
-                "u8",
-                32
-              ]
-            }
           }
         ]
       }
@@ -2019,9 +2207,7 @@
         "fields": [
           {
             "name": "confFilter",
-            "type": {
-              "defined": "I80F48"
-            }
+            "type": "f64"
           },
           {
             "name": "maxStalenessSlots",
@@ -2058,277 +2244,7 @@
       }
     },
     {
-      "name": "InnerNode",
-      "docs": [
-        "InnerNodes and LeafNodes compose the binary tree of orders.",
-        "",
-        "Each InnerNode has exactly two children, which are either InnerNodes themselves,",
-        "or LeafNodes. The children share the top `prefix_len` bits of `key`. The left",
-        "child has a 0 in the next bit, and the right a 1."
-      ],
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "tag",
-            "type": "u8"
-          },
-          {
-            "name": "padding",
-            "type": {
-              "array": [
-                "u8",
-                3
-              ]
-            }
-          },
-          {
-            "name": "prefixLen",
-            "docs": [
-              "number of highest `key` bits that all children share",
-              "e.g. if it's 2, the two highest bits of `key` will be the same on all children"
-            ],
-            "type": "u32"
-          },
-          {
-            "name": "key",
-            "docs": [
-              "only the top `prefix_len` bits of `key` are relevant"
-            ],
-            "type": "u128"
-          },
-          {
-            "name": "children",
-            "docs": [
-              "indexes into `BookSide::nodes`"
-            ],
-            "type": {
-              "array": [
-                "u32",
-                2
-              ]
-            }
-          },
-          {
-            "name": "childEarliestExpiry",
-            "docs": [
-              "The earliest expiry timestamp for the left and right subtrees.",
-              "",
-              "Needed to be able to find and remove expired orders without having to",
-              "iterate through the whole bookside."
-            ],
-            "type": {
-              "array": [
-                "u64",
-                2
-              ]
-            }
-          },
-          {
-            "name": "reserved",
-            "type": {
-              "array": [
-                "u8",
-                72
-              ]
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "LeafNode",
-      "docs": [
-        "LeafNodes represent an order in the binary tree"
-      ],
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "tag",
-            "docs": [
-              "NodeTag"
-            ],
-            "type": "u8"
-          },
-          {
-            "name": "ownerSlot",
-            "docs": [
-              "Index into the owning OpenOrdersAccount's OpenOrders"
-            ],
-            "type": "u8"
-          },
-          {
-            "name": "timeInForce",
-            "docs": [
-              "Time in seconds after `timestamp` at which the order expires.",
-              "A value of 0 means no expiry."
-            ],
-            "type": "u16"
-          },
-          {
-            "name": "padding",
-            "type": {
-              "array": [
-                "u8",
-                4
-              ]
-            }
-          },
-          {
-            "name": "key",
-            "docs": [
-              "The binary tree key, see new_node_key()"
-            ],
-            "type": "u128"
-          },
-          {
-            "name": "owner",
-            "docs": [
-              "Address of the owning OpenOrdersAccount"
-            ],
-            "type": "publicKey"
-          },
-          {
-            "name": "quantity",
-            "docs": [
-              "Number of base lots to buy or sell, always >=1"
-            ],
-            "type": "i64"
-          },
-          {
-            "name": "timestamp",
-            "docs": [
-              "The time the order was placed"
-            ],
-            "type": "u64"
-          },
-          {
-            "name": "pegLimit",
-            "docs": [
-              "If the effective price of an oracle pegged order exceeds this limit,",
-              "it will be considered invalid and may be removed.",
-              "",
-              "Only applicable in the oracle_pegged OrderTree"
-            ],
-            "type": "i64"
-          },
-          {
-            "name": "clientOrderId",
-            "docs": [
-              "User defined id for this order, used in FillEvents"
-            ],
-            "type": "u64"
-          },
-          {
-            "name": "reserved",
-            "type": {
-              "array": [
-                "u8",
-                32
-              ]
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "AnyNode",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "tag",
-            "type": "u8"
-          },
-          {
-            "name": "data",
-            "type": {
-              "array": [
-                "u8",
-                119
-              ]
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "OrderTreeRoot",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "maybeNode",
-            "type": "u32"
-          },
-          {
-            "name": "leafCount",
-            "type": "u32"
-          }
-        ]
-      }
-    },
-    {
-      "name": "OrderTreeNodes",
-      "docs": [
-        "A binary tree on AnyNode::key()",
-        "",
-        "The key encodes the price in the top 64 bits."
-      ],
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "orderTreeType",
-            "type": "u8"
-          },
-          {
-            "name": "padding",
-            "type": {
-              "array": [
-                "u8",
-                3
-              ]
-            }
-          },
-          {
-            "name": "bumpIndex",
-            "type": "u32"
-          },
-          {
-            "name": "freeListLen",
-            "type": "u32"
-          },
-          {
-            "name": "freeListHead",
-            "type": "u32"
-          },
-          {
-            "name": "reserved",
-            "type": {
-              "array": [
-                "u8",
-                512
-              ]
-            }
-          },
-          {
-            "name": "nodes",
-            "type": {
-              "array": [
-                {
-                  "defined": "AnyNode"
-                },
-                1024
-              ]
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "EventQueueHeader",
+      "name": "EventHeapHeader",
       "type": {
         "kind": "struct",
         "fields": [
@@ -2544,6 +2460,267 @@
       }
     },
     {
+      "name": "InnerNode",
+      "docs": [
+        "InnerNodes and LeafNodes compose the binary tree of orders.",
+        "",
+        "Each InnerNode has exactly two children, which are either InnerNodes themselves,",
+        "or LeafNodes. The children share the top `prefix_len` bits of `key`. The left",
+        "child has a 0 in the next bit, and the right a 1."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "tag",
+            "type": "u8"
+          },
+          {
+            "name": "padding",
+            "type": {
+              "array": [
+                "u8",
+                3
+              ]
+            }
+          },
+          {
+            "name": "prefixLen",
+            "docs": [
+              "number of highest `key` bits that all children share",
+              "e.g. if it's 2, the two highest bits of `key` will be the same on all children"
+            ],
+            "type": "u32"
+          },
+          {
+            "name": "key",
+            "docs": [
+              "only the top `prefix_len` bits of `key` are relevant"
+            ],
+            "type": "u128"
+          },
+          {
+            "name": "children",
+            "docs": [
+              "indexes into `BookSide::nodes`"
+            ],
+            "type": {
+              "array": [
+                "u32",
+                2
+              ]
+            }
+          },
+          {
+            "name": "childEarliestExpiry",
+            "docs": [
+              "The earliest expiry timestamp for the left and right subtrees.",
+              "",
+              "Needed to be able to find and remove expired orders without having to",
+              "iterate through the whole bookside."
+            ],
+            "type": {
+              "array": [
+                "u64",
+                2
+              ]
+            }
+          },
+          {
+            "name": "reserved",
+            "type": {
+              "array": [
+                "u8",
+                40
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "LeafNode",
+      "docs": [
+        "LeafNodes represent an order in the binary tree"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "tag",
+            "docs": [
+              "NodeTag"
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "ownerSlot",
+            "docs": [
+              "Index into the owning OpenOrdersAccount's OpenOrders"
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "timeInForce",
+            "docs": [
+              "Time in seconds after `timestamp` at which the order expires.",
+              "A value of 0 means no expiry."
+            ],
+            "type": "u16"
+          },
+          {
+            "name": "padding",
+            "type": {
+              "array": [
+                "u8",
+                4
+              ]
+            }
+          },
+          {
+            "name": "key",
+            "docs": [
+              "The binary tree key, see new_node_key()"
+            ],
+            "type": "u128"
+          },
+          {
+            "name": "owner",
+            "docs": [
+              "Address of the owning OpenOrdersAccount"
+            ],
+            "type": "publicKey"
+          },
+          {
+            "name": "quantity",
+            "docs": [
+              "Number of base lots to buy or sell, always >=1"
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "timestamp",
+            "docs": [
+              "The time the order was placed"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "pegLimit",
+            "docs": [
+              "If the effective price of an oracle pegged order exceeds this limit,",
+              "it will be considered invalid and may be removed.",
+              "",
+              "Only applicable in the oracle_pegged OrderTree"
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "clientOrderId",
+            "docs": [
+              "User defined id for this order, used in FillEvents"
+            ],
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "AnyNode",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "tag",
+            "type": "u8"
+          },
+          {
+            "name": "data",
+            "type": {
+              "array": [
+                "u8",
+                87
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "OrderTreeRoot",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "maybeNode",
+            "type": "u32"
+          },
+          {
+            "name": "leafCount",
+            "type": "u32"
+          }
+        ]
+      }
+    },
+    {
+      "name": "OrderTreeNodes",
+      "docs": [
+        "A binary tree on AnyNode::key()",
+        "",
+        "The key encodes the price in the top 64 bits."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "orderTreeType",
+            "type": "u8"
+          },
+          {
+            "name": "padding",
+            "type": {
+              "array": [
+                "u8",
+                3
+              ]
+            }
+          },
+          {
+            "name": "bumpIndex",
+            "type": "u32"
+          },
+          {
+            "name": "freeListLen",
+            "type": "u32"
+          },
+          {
+            "name": "freeListHead",
+            "type": "u32"
+          },
+          {
+            "name": "reserved",
+            "type": {
+              "array": [
+                "u8",
+                512
+              ]
+            }
+          },
+          {
+            "name": "nodes",
+            "type": {
+              "array": [
+                {
+                  "defined": "AnyNode"
+                },
+                1024
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
       "name": "I80F48",
       "docs": [
         "Nothing in Rust shall use these types. They only exist so that the Anchor IDL",
@@ -2715,6 +2892,9 @@
           },
           {
             "name": "SwitchboardV2"
+          },
+          {
+            "name": "RaydiumCLMM"
           }
         ]
       }
@@ -2746,6 +2926,20 @@
           },
           {
             "name": "OraclePegged"
+          }
+        ]
+      }
+    },
+    {
+      "name": "EventType",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Fill"
+          },
+          {
+            "name": "Out"
           }
         ]
       }
@@ -2939,20 +3133,6 @@
           }
         ]
       }
-    },
-    {
-      "name": "EventType",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "Fill"
-          },
-          {
-            "name": "Out"
-          }
-        ]
-      }
     }
   ],
   "events": [
@@ -2984,6 +3164,11 @@
     {
       "name": "FillLog",
       "fields": [
+        {
+          "name": "market",
+          "type": "publicKey",
+          "index": false
+        },
         {
           "name": "takerSide",
           "type": "u8",
@@ -3132,93 +3317,6 @@
       ]
     },
     {
-      "name": "CancelOrderLog",
-      "fields": [
-        {
-          "name": "openOrdersAccount",
-          "type": "publicKey",
-          "index": false
-        },
-        {
-          "name": "slot",
-          "type": "u8",
-          "index": false
-        },
-        {
-          "name": "side",
-          "type": "u8",
-          "index": false
-        },
-        {
-          "name": "quantity",
-          "type": "i64",
-          "index": false
-        }
-      ]
-    },
-    {
-      "name": "CancelOrdersLog",
-      "fields": [
-        {
-          "name": "openOrdersAccount",
-          "type": "publicKey",
-          "index": false
-        },
-        {
-          "name": "totalQuantity",
-          "type": "i64",
-          "index": false
-        }
-      ]
-    },
-    {
-      "name": "CancelAllOrdersLog",
-      "fields": [
-        {
-          "name": "openOrdersAccount",
-          "type": "publicKey",
-          "index": false
-        },
-        {
-          "name": "side",
-          "type": {
-            "option": "u8"
-          },
-          "index": false
-        },
-        {
-          "name": "quantity",
-          "type": "i64",
-          "index": false
-        },
-        {
-          "name": "limit",
-          "type": "u8",
-          "index": false
-        }
-      ]
-    },
-    {
-      "name": "PruneOrdersLog",
-      "fields": [
-        {
-          "name": "openOrdersAccount",
-          "type": "publicKey",
-          "index": false
-        },
-        {
-          "name": "quantity",
-          "type": "i64",
-          "index": false
-        },
-        {
-          "name": "limit",
-          "type": "u8",
-          "index": false
-        }
-      ]
-    },
-    {
       "name": "SetDelegateLog",
       "fields": [
         {
@@ -3321,171 +3419,186 @@
     },
     {
       "code": 6006,
-      "name": "InvalidInputPriceLots",
-      "msg": "Price lots should be greater than zero"
+      "name": "InvalidInputOrdersAmounts",
+      "msg": "Input amounts above limits"
     },
     {
       "code": 6007,
+      "name": "InvalidInputCancelSize",
+      "msg": "Price lots should be greater than zero"
+    },
+    {
+      "code": 6008,
+      "name": "InvalidInputPriceLots",
+      "msg": "Expected cancel size should be greater than zero"
+    },
+    {
+      "code": 6009,
       "name": "InvalidInputPegLimit",
       "msg": "Peg limit should be greater than zero"
     },
     {
-      "code": 6008,
+      "code": 6010,
       "name": "InvalidInputOrderType",
       "msg": "The order type is invalid. A taker order must be Market or ImmediateOrCancel"
     },
     {
-      "code": 6009,
+      "code": 6011,
       "name": "InvalidInputOrderId",
       "msg": "Order id cannot be zero"
     },
     {
-      "code": 6010,
-      "name": "InvalidInputStaleness",
-      "msg": "Oracle staleness limit is currently unimplemented"
-    },
-    {
-      "code": 6011,
-      "name": "InvalidInputQueueSlots",
-      "msg": "Slot above queue limit"
-    },
-    {
       "code": 6012,
+      "name": "InvalidInputHeapSlots",
+      "msg": "Slot above heap limit"
+    },
+    {
+      "code": 6013,
       "name": "InvalidOracleTypes",
       "msg": "Cannot combine two oracles of different providers"
     },
     {
-      "code": 6013,
+      "code": 6014,
       "name": "InvalidSecondOracle",
       "msg": "Cannot configure secondary oracle without primary"
     },
     {
-      "code": 6014,
+      "code": 6015,
       "name": "NoCloseMarketAdmin",
       "msg": "This market does not have a `close_market_admin` and thus cannot be closed."
     },
     {
-      "code": 6015,
+      "code": 6016,
       "name": "InvalidCloseMarketAdmin",
       "msg": "The signer of this transaction is not this market's `close_market_admin`."
     },
     {
-      "code": 6016,
+      "code": 6017,
       "name": "InvalidOpenOrdersAdmin",
       "msg": "The `open_orders_admin` required by this market to sign all instructions that creates orders is missing or is not valid"
     },
     {
-      "code": 6017,
+      "code": 6018,
       "name": "InvalidConsumeEventsAdmin",
       "msg": "The `consume_events_admin` required by this market to sign all instructions that consume events is missing or is not valid"
     },
     {
-      "code": 6018,
+      "code": 6019,
+      "name": "InvalidMarketVault",
+      "msg": "Provided `market_vault` is invalid"
+    },
+    {
+      "code": 6020,
       "name": "IndexerActiveOO",
       "msg": "Cannot be closed due to the existence of open orders accounts"
     },
     {
-      "code": 6019,
+      "code": 6021,
+      "name": "OraclePegInvalidOracleState",
+      "msg": "Cannot place a peg order due to invalid oracle state"
+    },
+    {
+      "code": 6022,
       "name": "UnknownOracleType",
       "msg": "oracle type cannot be determined"
     },
     {
-      "code": 6020,
+      "code": 6023,
       "name": "OracleConfidence",
       "msg": "an oracle does not reach the confidence threshold"
     },
     {
-      "code": 6021,
+      "code": 6024,
       "name": "OracleStale",
       "msg": "an oracle is stale"
     },
     {
-      "code": 6022,
+      "code": 6025,
       "name": "OrderIdNotFound",
       "msg": "Order id not found on the orderbook"
     },
     {
-      "code": 6023,
-      "name": "EventQueueContainsElements",
-      "msg": "Event queue contains elements and market can't be closed"
+      "code": 6026,
+      "name": "EventHeapContainsElements",
+      "msg": "Event heap contains elements and market can't be closed"
     },
     {
-      "code": 6024,
+      "code": 6027,
       "name": "InvalidOrderPostIOC",
       "msg": "ImmediateOrCancel is not a PostOrderType"
     },
     {
-      "code": 6025,
+      "code": 6028,
       "name": "InvalidOrderPostMarket",
       "msg": "Market is not a PostOrderType"
     },
     {
-      "code": 6026,
+      "code": 6029,
       "name": "WouldSelfTrade",
       "msg": "would self trade"
     },
     {
-      "code": 6027,
+      "code": 6030,
       "name": "MarketHasExpired",
       "msg": "The Market has already expired."
     },
     {
-      "code": 6028,
+      "code": 6031,
       "name": "InvalidPriceLots",
       "msg": "Price lots should be greater than zero"
     },
     {
-      "code": 6029,
+      "code": 6032,
       "name": "InvalidOraclePrice",
       "msg": "Oracle price above market limits"
     },
     {
-      "code": 6030,
+      "code": 6033,
       "name": "MarketHasNotExpired",
       "msg": "The Market has not expired yet."
     },
     {
-      "code": 6031,
+      "code": 6034,
       "name": "NoOwnerOrDelegate",
       "msg": "No correct owner or delegate."
     },
     {
-      "code": 6032,
+      "code": 6035,
       "name": "NoOwner",
       "msg": "No correct owner"
     },
     {
-      "code": 6033,
+      "code": 6036,
       "name": "OpenOrdersFull",
       "msg": "No free order index in open orders account"
     },
     {
-      "code": 6034,
+      "code": 6037,
       "name": "BookContainsElements",
       "msg": "Book contains elements"
     },
     {
-      "code": 6035,
+      "code": 6038,
       "name": "OpenOrdersOrderNotFound",
       "msg": "Could not find order in user account"
     },
     {
-      "code": 6036,
+      "code": 6039,
       "name": "InvalidPostAmount",
       "msg": "Amount to post above book limits"
     },
     {
-      "code": 6037,
+      "code": 6040,
       "name": "DisabledOraclePeg",
       "msg": "Oracle peg orders are not enabled for this market"
     },
     {
-      "code": 6038,
+      "code": 6041,
       "name": "NonEmptyMarket",
       "msg": "Cannot close a non-empty market"
     },
     {
-      "code": 6039,
+      "code": 6042,
       "name": "NonEmptyOpenOrdersPosition",
       "msg": "Cannot close a non-empty open orders account"
     }
