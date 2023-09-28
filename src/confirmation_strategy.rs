@@ -126,7 +126,7 @@ pub async fn process_blocks(
                 },
                 number_of_mm_transactions: mm_transaction_count,
                 total_transactions: nb_transactions as u64,
-                cu_consumed: cu_consumed,
+                cu_consumed,
                 percentage_filled_by_openbook: filled_percentage,
             });
         }

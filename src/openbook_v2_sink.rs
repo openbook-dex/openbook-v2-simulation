@@ -1,10 +1,8 @@
-use std::{
-    collections::{BTreeMap, HashSet},
-};
+use std::collections::{BTreeMap, HashSet};
 
 use async_trait::async_trait;
 use bytemuck::cast_ref;
-use openbook_v2::state::{EventQueue, EventType, FillEvent, OutEvent};
+use openbook_v2::state::{EventHeap, EventType, FillEvent, OutEvent};
 use solana_program::{
     instruction::{AccountMeta, Instruction},
     pubkey::Pubkey,
@@ -37,7 +35,7 @@ impl OpenbookV2CrankSink {
     ) -> Self {
         let mut map_event_q_to_market = BTreeMap::new();
         for market in &obv2_config.markets {
-            map_event_q_to_market.insert(market.event_queue, market.market_pk);
+            map_event_q_to_market.insert(market.event_heap, market.market_pk);
         }
         Self {
             instruction_sender,
@@ -59,17 +57,17 @@ impl AccountWriteSink for OpenbookV2CrankSink {
         let (ix, mkt_pk): (Result<Instruction, String>, Pubkey) = {
             let mut header_data: &[u8] = account.data();
 
-            let event_queue: EventQueue = EventQueue::try_deserialize(&mut header_data)
+            let event_heap: EventHeap = EventHeap::try_deserialize(&mut header_data)
                 .expect("event queue should be correctly deserailizable");
 
             // only crank if at least 1 fill or a sufficient events of other categories are buffered
-            let contains_fill_events = event_queue
+            let contains_fill_events = event_heap
                 .iter()
                 .find(|e| e.0.event_type == EventType::Fill as u8)
                 .is_some();
-            let len = event_queue.iter().count();
+            let len = event_heap.iter().count();
             let has_backlog = len > MAX_BACKLOG;
-            let seq_num = event_queue.header.seq_num;
+            let seq_num = event_heap.header.seq_num;
             log::debug!("evq {pk:?} seq_num={seq_num} len={len} contains_fill_events={contains_fill_events} has_backlog={has_backlog}");
 
             if !contains_fill_events && !has_backlog {
@@ -77,7 +75,7 @@ impl AccountWriteSink for OpenbookV2CrankSink {
             }
 
             let mut events_accounts = HashSet::new();
-            event_queue.iter().take(MAX_EVENTS_PER_TX).for_each(|e| {
+            event_heap.iter().take(MAX_EVENTS_PER_TX).for_each(|e| {
                 if events_accounts.len() < MAX_ACCS_PER_TX {
                     match EventType::try_from(e.0.event_type).expect("openbook v2 event") {
                         EventType::Fill => {
@@ -100,7 +98,7 @@ impl AccountWriteSink for OpenbookV2CrankSink {
 
             let mut accounts_meta = openbook_v2::accounts::ConsumeEvents {
                 consume_events_admin: None,
-                event_queue: pk.clone(),
+                event_heap: pk.clone(),
                 market: mkt_pk.clone(),
             }
             .to_account_metas(None);

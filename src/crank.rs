@@ -95,16 +95,16 @@ pub fn start(
         }
     });
 
-    let event_queues = openbook_config
+    let event_heaps = openbook_config
         .markets
         .iter()
-        .map(|x| x.event_queue.clone())
+        .map(|x| x.event_heap.clone())
         .collect_vec();
     let openbook_config = openbook_config.clone();
 
     let t2 = tokio::spawn(async move {
         let routes = vec![AccountWriteRoute {
-            matched_pubkeys: event_queues.clone(),
+            matched_pubkeys: event_heaps.clone(),
             sink: Arc::new(OpenbookV2CrankSink::new(
                 openbook_config,
                 instruction_sender,
@@ -115,7 +115,7 @@ pub fn start(
 
         let filter_config = FilterConfig {
             program_ids: vec![config.program_id.to_string()],
-            account_ids: event_queues.iter().map(|x| x.to_string()).collect_vec(),
+            account_ids: event_heaps.iter().map(|x| x.to_string()).collect_vec(),
         };
 
         info!("matched_pks={:?}", routes[0].matched_pubkeys);
@@ -540,12 +540,12 @@ async fn feed_data(
     }
 }
 
-use solana_rpc::rpc::rpc_accounts::AccountsDataClient;
+use solana_rpc::rpc::rpc_accounts_scan::AccountsScanClient;
 pub async fn get_snapshot_gpa(
     rpc_http_url: String,
     program_id: String,
 ) -> anyhow::Result<OptionalContext<Vec<RpcKeyedAccount>>> {
-    let rpc_client = http::connect::<AccountsDataClient>(&rpc_http_url)
+    let rpc_client = http::connect::<AccountsScanClient>(&rpc_http_url)
         .await
         .map_err_anyhow()?;
 
@@ -570,6 +570,7 @@ pub async fn get_snapshot_gpa(
     Ok(account_snapshot)
 }
 
+use solana_rpc::rpc::rpc_accounts::AccountsDataClient;
 pub async fn get_snapshot_gma(
     rpc_http_url: String,
     ids: Vec<String>,

@@ -64,7 +64,7 @@ fn create_market_making_instructions(
         let accounts = openbook_v2::accounts::PlaceOrder {
             asks: market.asks,
             bids: market.bids,
-            event_queue: market.event_queue,
+            event_heap: market.event_heap,
             market: market.market_pk,
             market_vault: market.quote_vault,
             open_orders_account,
@@ -73,7 +73,6 @@ fn create_market_making_instructions(
             oracle_b: Some(market.oracle_b),
             signer: user.secret.pubkey(),
             user_token_account: user.token_data[0].token_account,
-            system_program: anchor_client::solana_sdk::system_program::id(),
             token_program: anchor_spl::token::ID,
         };
 
@@ -89,7 +88,6 @@ fn create_market_making_instructions(
                 side: openbook_v2::state::Side::Bid,
                 self_trade_behavior: openbook_v2::state::SelfTradeBehavior::DecrementTake,
             },
-            
         };
         Instruction::new_with_bytes(
             program_id,
@@ -103,7 +101,7 @@ fn create_market_making_instructions(
         let accounts = openbook_v2::accounts::PlaceOrder {
             asks: market.asks,
             bids: market.bids,
-            event_queue: market.event_queue,
+            event_heap: market.event_heap,
             market: market.market_pk,
             market_vault: market.base_vault,
             open_orders_account,
@@ -112,7 +110,6 @@ fn create_market_making_instructions(
             oracle_b: Some(market.oracle_b),
             signer: user.secret.pubkey(),
             user_token_account: market.base_vault,
-            system_program: anchor_client::solana_sdk::system_program::id(),
             token_program: anchor_spl::token::ID,
         };
 

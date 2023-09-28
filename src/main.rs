@@ -121,7 +121,7 @@ async fn main() -> anyhow::Result<()> {
     // start event queue crank
     let mut other_services = crank::start(
         crank::KeeperConfig {
-            program_id: program_id,
+            program_id,
             rpc_url: args.rpc_url.to_string(),
             websocket_url: args.ws_url.to_string(),
         },
@@ -176,9 +176,7 @@ async fn main() -> anyhow::Result<()> {
     let reporting_thread = tokio::spawn(async move {
         loop {
             tokio::time::sleep(Duration::from_secs(60)).await;
-            stats
-                .report(false, "openbook v2 simulation")
-                .await;
+            stats.report(false, "openbook v2 simulation").await;
         }
     });
     other_services.push(reporting_thread);
@@ -199,9 +197,12 @@ async fn main() -> anyhow::Result<()> {
     // wait for 2 minutes fo all the transactions to get confirmed
     let _ = tokio::time::timeout(
         Duration::from_secs(120),
-        futures::future::select_all(other_services)
-    ).await;
+        futures::future::select_all(other_services),
+    )
+    .await;
 
-    openbook_simulation_stats.report(true, "Openbook Simulation End").await;
+    openbook_simulation_stats
+        .report(true, "Openbook Simulation End")
+        .await;
     Ok(())
 }

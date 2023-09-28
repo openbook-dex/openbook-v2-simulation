@@ -60,7 +60,7 @@ pub struct Market {
     pub oracle_b: String,
     pub asks: String,
     pub bids: String,
-    pub event_queue: String,
+    pub event_heap: String,
     pub base_vault: String,
     pub quote_vault: String,
     pub base_mint: String,
