@@ -302,7 +302,12 @@
           "isSigner": false
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "name",
+          "type": "string"
+        }
+      ]
     },
     {
       "name": "closeOpenOrdersAccount",
@@ -819,6 +824,11 @@
           "isSigner": true
         },
         {
+          "name": "penaltyPayer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
           "name": "market",
           "isMut": true,
           "isSigner": false
@@ -1259,6 +1269,11 @@
           "isSigner": true
         },
         {
+          "name": "penaltyPayer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
           "name": "openOrdersAccount",
           "isMut": true,
           "isSigner": false
@@ -1325,7 +1340,12 @@
           "isSigner": true
         },
         {
-          "name": "payer",
+          "name": "owner",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "penaltyPayer",
           "isMut": true,
           "isSigner": true
         },
@@ -2079,7 +2099,7 @@
     {
       "name": "NonZeroPubkeyOption",
       "docs": [
-        "Like `Option`, but implemented for `Pubkey`."
+        "Like `Option`, but implemented for `Pubkey` to be used with `zero_copy`"
       ],
       "type": {
         "kind": "struct",
@@ -3381,6 +3401,66 @@
         {
           "name": "receiver",
           "type": "publicKey",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "OpenOrdersPositionLog",
+      "fields": [
+        {
+          "name": "owner",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "openOrdersAccountNum",
+          "type": "u32",
+          "index": false
+        },
+        {
+          "name": "market",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "bidsBaseLots",
+          "type": "i64",
+          "index": false
+        },
+        {
+          "name": "asksBaseLots",
+          "type": "i64",
+          "index": false
+        },
+        {
+          "name": "baseFreeNative",
+          "type": "u64",
+          "index": false
+        },
+        {
+          "name": "quoteFreeNative",
+          "type": "u64",
+          "index": false
+        },
+        {
+          "name": "lockedMakerFees",
+          "type": "u64",
+          "index": false
+        },
+        {
+          "name": "referrerRebatesAvailable",
+          "type": "u64",
+          "index": false
+        },
+        {
+          "name": "makerVolume",
+          "type": "u128",
+          "index": false
+        },
+        {
+          "name": "takerVolume",
+          "type": "u128",
           "index": false
         }
       ]

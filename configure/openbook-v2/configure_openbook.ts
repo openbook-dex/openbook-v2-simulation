@@ -85,14 +85,13 @@ export class OpenbookConfigurator {
         [
           Buffer.from("OpenOrders"),
           user.publicKey.toBuffer(),
-          market.market_pk.toBuffer(),
           accountIndex.toBuffer("le", 4),
         ],
         this.openbookProgramId,
       );
 
       await this.program.methods
-        .createOpenOrdersAccount()
+        .createOpenOrdersAccount("test simulator")
         .accounts({
           openOrdersIndexer,
           openOrdersAccount: openOrders,
